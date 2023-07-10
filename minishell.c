@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 10:59:39 by ybourais          #+#    #+#             */
-/*   Updated: 2023/07/10 11:57:37 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/07/10 12:09:57 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,11 +91,13 @@ int main(int argc, char **argv,char **env)
 	t_env *envirment;
 	
 	envirment = ft_env(env);
+	while(envirment)	
+		printf("%s\n",envirment->var), envirment = envirment->next;
     while(1)
     {
         input = readline("\e[12;32mbash-3.2$ \e[0m");
         add_history(input);
-		parssing(input);
+		// parssing(input);
         // check_quoting(input);
 		tab = ft_split(input);
 		// for(int i = 0; tab[i]; i++)

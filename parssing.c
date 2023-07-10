@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 10:05:20 by ybourais          #+#    #+#             */
-/*   Updated: 2023/07/10 11:53:25 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/07/10 12:06:17 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,14 +59,10 @@ void check_quoting(char *str)
     str[j] = '\0';
 }
 
-char *set_variables(char*str,int n)
+char *set_variables(char*str)
 {
 	char *tab;
-	int j = 0;
 	int i = 0;
-
-	if(n == 0)
-	{
 		while(str[i] && str[i] != '=')
 			i++;
 		tab = malloc(i+1);
@@ -77,9 +73,13 @@ char *set_variables(char*str,int n)
 				i++;
 			}
 		tab[i] = '\0';	
-	}
-	if(n == 1)
-	{
+	return(tab);
+}
+char *set_value(char*str)
+{
+	char *tab;
+	int j = 0;
+	int i = 0;
 		while(str[i] && str[i] != '=')
 			i++;
 		if(str[i] == '\0')
@@ -88,9 +88,7 @@ char *set_variables(char*str,int n)
 		i++;
 		while(str[i])
 				tab[j++] = str[i++];
-		
 		tab[j] = '\0';	
-	}
 	return(tab);
 }
 
@@ -99,8 +97,8 @@ t_env *ft_add_back(char *str)
 	t_env *node;
 
 	node = malloc(sizeof(t_env));
-	node->var = set_variables(str,0);
-	node->str = set_variables(str,1);
+	node->var = set_variables(str);
+	node->str = set_value(str);
 	return(node);
 }
 

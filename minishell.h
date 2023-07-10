@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 11:00:07 by ybourais          #+#    #+#             */
-/*   Updated: 2023/07/07 14:34:30 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/07/10 12:08:18 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct s_list
 }t_env;
 
 void	check_quoting(char *str);
-char	*set_variables(char*str,int n);
+char	*set_variables(char*str);
 int 	ft_var_name(char *str);
 t_env 	*ft_builtins(t_env * env,char **tab);
 t_env	*ft_export(t_env *env,char **tab);
