@@ -1,0 +1,20 @@
+total 160
+drwxr-xr-x  19 yichiba  candidates    646 Jul  7 13:27 .
+drwxr-xr-x  36 yichiba  candidates   1224 Jun 15 11:18 ..
+-rw-r--r--@  1 yichiba  candidates   6148 Jun 15 11:18 .DS_Store
+drwxr-xr-x  14 yichiba  candidates    476 May 26 00:16 .git
+drwxr-xr-x   5 yichiba  candidates    170 Jun 19 17:56 .vscode
+-rw-r--r--   1 yichiba  candidates    312 Jun 20 12:04 Makefile
+-rwxr-xr-x   1 yichiba  candidates  12556 Jun  5 18:13 a.out
+-rw-r--r--   1 yichiba  candidates    181 Jun  5 18:14 c.c
+-rw-r--r--   1 yichiba  candidates   3739 Jun 20 13:27 envirement.c
+-rw-r--r--   1 yichiba  candidates   3768 Jul  7 12:58 envirement.o
+-rw-r--r--   1 yichiba  candidates      0 Jul  7 13:27 file
+-rw-r--r--   1 yichiba  candidates      0 Jul  7 13:27 file2
+-rw-r--r--   1 yichiba  candidates      0 Jul  7 13:27 file3
+-rwxr-xr-x   1 yichiba  candidates  17756 Jul  7 12:58 minishell
+-rw-r--r--   1 yichiba  candidates   2500 Jul  7 13:11 minishell.c
+-rw-r--r--   1 yichiba  candidates   1890 Jul  7 13:11 minishell.h
+-rw-r--r--   1 yichiba  candidates   2532 Jul  7 12:58 minishell.o
+-rw-r--r--   1 yichiba  candidates   2684 Jun 20 12:04 parssing.c
+-rw-r--r--   1 yichiba  candidates   2780 Jul  7 12:58 parssing.o

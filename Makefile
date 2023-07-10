@@ -1,10 +1,10 @@
 NAME = minishell
 
-SRCS = minishell.c parssing.c
+SRCS = minishell.c parssing.c envirement.c
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra 
+CFLAGS = -Wall -Werror -Wextra #-g -fsanitize=address
 
 OBJS = $(SRCS:.c=.o)
 

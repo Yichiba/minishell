@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 10:05:20 by ybourais          #+#    #+#             */
-/*   Updated: 2023/05/24 19:12:26 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/07/10 11:53:25 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,11 @@ void check_quoting(char *str)
     i = 0;
     while (str[i] != '\0')
     {
-		while(str[i] == ' ' && str[i + 1] == ' ')
+		while(str[i] == ' ' && (str[i + 1] == ' ' || str[i+1] == '\0'))
 			i++;
-        if (str[i] != 34 && str[i] != 39)
+        if (str[i] == '$' && str[i+1] != ' ')
+            str[j] = '`';
+        else if (str[i] != 34 && str[i] != 39)
             str[j] = str[i];
         else if(str[i] == 34 || str[i] == 39)
         {
@@ -41,7 +43,13 @@ void check_quoting(char *str)
             {
                 if(str[i] == '\0')
                     ft_error(1);
-                str[j++] = str[i++];
+                else if(str[i] == '$' && quote == 34)
+                	{
+						str[j++] = '`';
+						 i++;
+					}
+				else
+                	str[j++] = str[i++];
             }
             j--;
         }
@@ -50,3 +58,66 @@ void check_quoting(char *str)
     }
     str[j] = '\0';
 }
+
+char *set_variables(char*str,int n)
+{
+	char *tab;
+	int j = 0;
+	int i = 0;
+
+	if(n == 0)
+	{
+		while(str[i] && str[i] != '=')
+			i++;
+		tab = malloc(i+1);
+		i = 0;
+		while(str[i] && str[i] != '=')
+			{
+				tab[i] = str[i];
+				i++;
+			}
+		tab[i] = '\0';	
+	}
+	if(n == 1)
+	{
+		while(str[i] && str[i] != '=')
+			i++;
+		if(str[i] == '\0')
+			return(NULL);
+		tab = malloc(strlen(str) - i);
+		i++;
+		while(str[i])
+				tab[j++] = str[i++];
+		
+		tab[j] = '\0';	
+	}
+	return(tab);
+}
+
+t_env *ft_add_back(char *str)
+{
+	t_env *node;
+
+	node = malloc(sizeof(t_env));
+	node->var = set_variables(str,0);
+	node->str = set_variables(str,1);
+	return(node);
+}
+
+t_env *ft_env(char **tab)
+{
+	int i =0;
+	t_env *head = NULL;
+	t_env *ptr;
+	
+	head = ft_add_back(tab[i++]);
+	ptr = head;
+	while(tab[i])
+	{
+		ptr->next = ft_add_back(tab[i]);
+		ptr =ptr->next;
+		i++;
+	}
+	return(head);
+}
+

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ybourais <ybourais@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/15 11:00:07 by ybourais          #+#    #+#             */
-/*   Updated: 2023/05/24 12:48:09 by ybourais         ###   ########.fr       */
+/*   Updated: 2023/07/07 14:34:30 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 #include <fcntl.h> /* open */
+#include <string.h> /* open */
 # include <stdio.h> /* printf strerror perror*/
 #include <readline/readline.h> /* redline */
 #include <readline/history.h> /* redline */
@@ -26,8 +27,20 @@
 #include <termios.h> /* tcsetattr */
 #include <termcap.h> /* tgetent */
 
-void parssing(char *input);
-int appear_first(char *str);
-void check_quoting(char *str);
+typedef struct s_list
+{	
+	char *var;
+	char *str;
+	struct s_list *next;
+}t_env;
+
+void	check_quoting(char *str);
+char	*set_variables(char*str,int n);
+int 	ft_var_name(char *str);
+t_env 	*ft_builtins(t_env * env,char **tab);
+t_env	*ft_export(t_env *env,char **tab);
+t_env 	*ft_add_back(char *str);
+int		ft_strstr(char *str, char *ptr);
+t_env 	*ft_env(char **tab);
 
 #endif
