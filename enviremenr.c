@@ -6,13 +6,13 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:38:58 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/25 19:19:17 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/07/27 12:57:14 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *set_variables(char*str)
+char *set_variables_name(char*str)
 {
 	char *tab;
 	int i = 0;
@@ -51,13 +51,13 @@ t_env *ft_add_back(char *str)
 	t_env *node;
 
 	node = malloc(sizeof(t_env));
-	node->var = set_variables(str);
+	node->var = set_variables_name(str);
 	node->str = set_value(str);
 	node->next = NULL;
 	return(node);
 }
 
-t_env *ft_env(char **tab)
+t_env *get_env(char **tab)
 {
 	int i =0;
 	t_env *head = NULL;

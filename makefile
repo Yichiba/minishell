@@ -1,6 +1,6 @@
 NAME = minishell
 
-SRCS = minishell.c enviremenr.c parser.c print.c lexer.c lexer_outils.c pars_redir.c
+SRCS = minishell.c enviremenr.c parser.c print.c lexer.c lexer_outils.c pars_redir.c builtins.c
 
 CC = cc
 

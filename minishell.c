@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/25 20:25:18 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/07/27 23:24:02 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,12 +106,13 @@ char **get_full_cmd(t_lex *start,int args)
 	int i = 0;
 	t_lex *tmp;
 	tmp= start;
-	cmd = malloc(args * sizeof(char *));
+	cmd = malloc((args +1) * sizeof(char *));
 	while(tmp  && tmp->type != PIPE )
 	{
 		cmd[i++] = ft_strdup(tmp->content);
 		tmp = tmp->next;
 	}
+	cmd[i] = NULL;
 	return(cmd);
  }
  
@@ -136,7 +137,7 @@ int main(int ac, char **av, char **environ)
 	(void)ac;
 	(void)av;
     t_env *env = NULL;
-    env = ft_env(environ);
+    env = get_env(environ);
 	parser = NULL;
 	parser = NULL ;
     while(1)
@@ -144,10 +145,9 @@ int main(int ac, char **av, char **environ)
         input = readline("\e[1;53mMiniShell$ \e[0m");
 		add_history(input);
 		lexer = ft_lexer(input);
-		lexer = ft_clean(lexer);
-		ft_print_lexer(lexer);
+		lexer = ft_clean(lexer,env);
 		parser = ft_parser(lexer);
-		// ft_print_parser(parser);
+		ft_builtins(parser,env);
 		free(input);
     }
     return 0;

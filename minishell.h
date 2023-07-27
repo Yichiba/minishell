@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/25 19:12:32 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/07/27 22:59:58 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,12 @@ typedef struct s_pars
 }t_pars;
 
 int ft_strlen(char *str);
-t_env	*ft_env(char **tab);
+t_env	*get_env(char **tab);
 void	ft_print_env(t_env *env);
-char	*set_variables(char*str);
+char	*set_variables_name(char*str);
 char	*set_value(char*str);
+// char	*set_variables(char*str);
+// char	*set_value(char*str);
 t_env	*ft_add_back(char *str);
 char	*ft_strdup(char *str);
 t_lex	*remove_node(t_lex *lex, t_lex *node);
@@ -93,7 +95,13 @@ t_pars	*ft_parser(t_lex *lexer);
 int		ft_syntax_pipe(t_lex * lexer);
 t_pars	*add_new_node(t_lex *start,int args);
 int 	ft_count_args(t_lex *start);
-t_lex	*ft_clean(t_lex *lexer);
+t_lex	*ft_clean(t_lex *lexer,t_env *env);
+
+
+
+t_env	*ft_builtins( t_pars *parser, t_env *env);
+int		ft_strcmp(char *str, char *ptr);
+
 
 
 char	*ft_dollar(char *input, int *i);
@@ -112,7 +120,6 @@ t_lex	*ft_join(t_lex *tmp, t_lex *next);
 t_lex	*remove_node(t_lex *lex, t_lex *node);
 t_lex	*ft_remove_quote(t_lex *lexer);
 t_lex	*ft_remove_space(t_lex *lexer);
-t_lex	*ft_clean(t_lex *lexer);
 t_red	*ft_add_red(t_red *red, char *file, int type);
 int		ft_syntax_redir(t_lex *lexer);
 t_red	*ft_red(t_lex *lexer);
