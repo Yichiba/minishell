@@ -6,24 +6,11 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:10:17 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/27 23:19:46 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/04 15:48:55 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_lex *ft_join(t_lex *tmp, t_lex *next)
-{
-	char *str;
-	char *tab;
-	str = ft_strdup(tmp->content);
-	tab = ft_strdup(next->content);
-	tmp->content = ft_strjoin(str, tab);
-	free(str);
-	free(tab);
-	return(tmp);
-}
-
 
 t_lex	*ft_remove_quote(t_lex *lexer)
 {
@@ -42,7 +29,7 @@ t_lex	*ft_remove_quote(t_lex *lexer)
 	{
 		if((tmp->type == WORD && tmp->state == GENERAL ) && (tmp->next->type == WORD && tmp->next->state == GENERAL))
 			{
-				tmp = ft_join(tmp,tmp->next);
+				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
 				lexer = remove_node(lexer,tmp->next);
 			}
 		tmp = tmp->next;
@@ -51,11 +38,13 @@ t_lex	*ft_remove_quote(t_lex *lexer)
 }
 
 
-t_lex *remove_node(t_lex *lex, t_lex *node) {
+t_lex *remove_node(t_lex *lex, t_lex *node) 
+{
     if (lex == node) {
         t_lex *next_node = lex->next;
         free(lex->content);
         free(lex);
+		lex = NULL;
         return next_node;
     }
     t_lex *tmp = lex;
@@ -65,12 +54,13 @@ t_lex *remove_node(t_lex *lex, t_lex *node) {
 	{
         t_lex *next_node = tmp->next->next;
         free(tmp->next->content);
-        // free(tmp->next);
+        free(tmp->next);
         tmp->next = next_node;
     }
 
     return lex;
 }
+
 
 t_lex *ft_remove_space(t_lex *lexer)
 {
@@ -105,9 +95,13 @@ char *look_for_var(t_env *env,char *var_name)
 	while(tmp)
 	{
 		if(ft_strcmp(var_name,tmp->var) == 1)
-			return(tmp->str);
+			{
+				free(var_name);
+				return(tmp->str);
+			}
 		tmp = tmp->next;
 	}
+	free(var_name);
 	return(ft_strdup(""));
 }
 
@@ -115,15 +109,17 @@ t_lex	*ft_expand_variables(t_lex	*lexer,t_env	*env)
 {
 	t_lex	*tmp;
 	char *var_name;
+	char *var_value;
 	tmp	= lexer;
 	while(tmp)
 	{
 		if(tmp->type == VAR)
 			{
-				var_name = tmp->content +1;
-				var_name = look_for_var(env,var_name);
+				var_name = ft_strdup(tmp->content +1);
 				free(tmp->content);
-				tmp->content = var_name;
+				var_value = look_for_var(env,var_name);
+				tmp->content = ft_strdup(var_value);
+				tmp->type = WORD;
 			}
 		tmp = tmp->next;
 	}
@@ -139,19 +135,25 @@ t_lex *ft_clean(t_lex *lexer,t_env *env)
 	tmp  = lexer;
 	while(tmp && tmp->next)
 	{
-		if(tmp->state == IN_QUOTE && tmp->next->state == IN_QUOTE)
+		
+		if(tmp->type == VAR && tmp->next->type == WORD)
 			{
-				ft_join(tmp, tmp->next);
+				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
+				lexer = remove_node(lexer, tmp->next);
+			}	
+		else if(tmp->state == IN_QUOTE && tmp->next->state == IN_QUOTE)
+			{
+				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
 				lexer = remove_node(lexer, tmp->next);
 			}
 		else if(tmp->state == IN_DQUOTE && tmp->type != VAR && tmp->next->type != VAR && tmp->next->state == IN_DQUOTE )
 			{
-				ft_join(tmp, tmp->next);
+				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
 				lexer = remove_node(lexer, tmp->next);
 			}	
 		else if(tmp->type == WORD && tmp->next->type == WORD)
 			{
-				ft_join(tmp, tmp->next);
+				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
 				lexer = remove_node(lexer, tmp->next);
 			}	
 		else

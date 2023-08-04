@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   builtins.c                                         :+:      :+:    :+:   */
+/*   builtins_copy.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 21:47:14 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/04 15:59:42 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/04 13:01:16 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,34 +157,58 @@ t_env *ft_exit(t_env *env, char **tab)
 t_env *ft_builtins(t_pars *parser, t_env *env)
 {
 	int file = -1;
-	int std_out = -1;
-	int std_in = -1;
-	// int input = 0;
+	int stdout = -1;
+	int stdin = -1;
+	int fd[2];
+	int id;
+	int input = 0;
 	while (parser)
 	{
-			if (parser->red)
-				file = ft_redirections(parser->red, &std_in, &std_out);
-			if(file == -5)
-				return(env);
-			if (ft_strcmp(parser->full_cmd[0], "export") == 1) // m	ainprocess
-				env = ft_export(env, parser->full_cmd);
-			else if (ft_strcmp(parser->full_cmd[0], "unset") == 1) ///////// mainprocess
-				env = ft_unset(env, parser->full_cmd);
-			else if (ft_strcmp(parser->full_cmd[0], "cd") == 1)   ///////
-				env = ft_cd(env, parser->full_cmd);
-			else if (ft_strcmp(parser->full_cmd[0], "exit") == 1) 
-				env = ft_exit(env, parser->full_cmd);
-			else if (ft_strcmp(parser->full_cmd[0], "pwd") == 1)
-				env = ft_pwd(env);
-			else if (ft_strcmp(parser->full_cmd[0], "echo") == 1)
-				ft_echo(parser->full_cmd);
-			else if (ft_strcmp(parser->full_cmd[0], "env") == 1)
-				ft_env(env);
-			else
-				env = find_commands(env, parser);
-			if (parser->red)
-				close_file(file, parser->red, &std_in, &std_out);
+		pipe(fd);
+		id = fork();
+		if (id == 0)
+		{
+			dup2(input, 0);
+			if (parser->next)
+			{
+				dup2(fd[1], 1);
+				close(fd[1]);
+				close(fd[0]);
+			}
+			find_commands(env, parser);
+		}
+		else
+		{
+			input = fd[0];
+			close(fd[1]);
+			wait(0);
+		if (!parser)
+			return (env);
+		if (parser->args_num == 0)
+			return (env);
+		if (parser->red)
+			file = ft_redirections(parser->red, &stdin, &stdout);
+		if (ft_strcmp(parser->full_cmd[0], "export") == 1)
+			env = ft_export(env, parser->full_cmd);
+		else if (ft_strcmp(parser->full_cmd[0], "unset") == 1)///////// mainprocess
+			env = ft_unset(env, parser->full_cmd);
+		else if (ft_strcmp(parser->full_cmd[0], "cd") == 1) ///////
+			env = ft_cd(env, parser->full_cmd);
+		else if (ft_strcmp(parser->full_cmd[0], "pwd") == 1)
+			env = ft_pwd(env);
+		else if (ft_strcmp(parser->full_cmd[0], "echo") == 1)
+			ft_echo(parser->full_cmd);
+		else if (ft_strcmp(parser->full_cmd[0], "env") == 1)
+			ft_env(env);
+		else if (ft_strcmp(parser->full_cmd[0], "exit") == 1) ////////
+			env = ft_exit(env, parser->full_cmd);
+		else
+			env = find_commands(env, parser);
+		if (parser->red)
+			close_file(file, parser->red, &stdin, &stdout);
+		}
 		parser = parser->next;
 	}
+		// close(input);
 	return (env);
 }

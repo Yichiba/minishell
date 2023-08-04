@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 13:12:40 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/27 11:42:23 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/04 15:04:57 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ char *get_type(enum e_token token)
 void ft_print_lexer(t_lex *lexer)
 {
 	t_lex *tmp;
-
 	tmp = lexer;
 	if (tmp)
 	{
@@ -89,7 +88,7 @@ void ft_print_parser(t_pars *parser)
 	while(tmp)
 	{
 		for(int i = 0; i < tmp->args_num; i++)
-			printf("|%s|\n",tmp->full_cmd[i]);
+			printf("%s\n",tmp->full_cmd[i]);
 		printf("---------------------------------------------\n");
 		ft_print_red(tmp->red);
 		printf("---------------------------------------------\n");

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:57:51 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/25 19:33:58 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/02 11:21:17 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,11 +121,11 @@ t_lex	*ft_lexer(char *input)
 			lexer = ft_add(lexer, ft_dollar(input, &i), VAR);
 		else if (input[i] == '|')
 			lexer = ft_add(lexer, ft_strdup("|"), PIPE);
-		else if (input[i] == '<' && input[i + 1] == '<' && i++)
+		else if (input[i + 1] && input[i] == '<' && input[i + 1] == '<' && i++)
 			lexer = ft_add(lexer, ft_strdup("<<"), HERE_DOC);
 		else if (input[i] == '<')
 			lexer = ft_add(lexer, ft_strdup("<"), REDIR_IN);
-		else if (input[i] == '>' && input[i + 1] == '>' && i++)
+		else if (input[i + 1] && input[i] == '>' && input[i + 1] == '>' && i++)
 			lexer = ft_add(lexer, ft_strdup(">>"), DREDIR_OUT);
 		else if (input[i] == '>')
 			lexer = ft_add(lexer, ft_strdup(">"), REDIR_OUT);

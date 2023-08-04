@@ -1,10 +1,12 @@
 NAME = minishell
 
-SRCS = minishell.c enviremenr.c parser.c print.c lexer.c lexer_outils.c pars_redir.c builtins.c
+SRCS = minishell.c enviremenr.c parser.c print.c lexer.c lexer_outils.c pars_redir.c builtins.c\
+		builtins_outils.c redirections.c execve.c
 
 CC = cc
 
 CFLAGS = -Wall -Werror -Wextra -fsanitize=address -g
+# CFLAGS = -fsanitize=address -g
 
 
 OBJS = $(SRCS:.c=.o)

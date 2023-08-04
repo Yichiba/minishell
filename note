@@ -1,0 +1,8 @@
+// pipe error
+// redirections error 
+// herdoc
+// check for file permission before open it , ft_access 
+// exit status
+// leaks
+// norminette
+//signals

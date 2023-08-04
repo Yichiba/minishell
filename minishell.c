@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/27 23:24:02 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/04 16:01:22 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ char *ft_strjoin(char *str, char *tab)
 		tmp[i] = str[i];
 		i++;
 	}
+	if(str)
+		free(str);
 	while(tab && tab[j])
 	{
 		tmp[i] = tab[j];
@@ -102,12 +104,14 @@ char *ft_strjoin(char *str, char *tab)
 
 char **get_full_cmd(t_lex *start,int args)
  {
-	char 	**cmd;
+	char 	**cmd = NULL;
 	int i = 0;
 	t_lex *tmp;
 	tmp= start;
+	if(!tmp)
+		return(NULL);
 	cmd = malloc((args +1) * sizeof(char *));
-	while(tmp  && tmp->type != PIPE )
+	while(tmp && tmp->type != PIPE )
 	{
 		cmd[i++] = ft_strdup(tmp->content);
 		tmp = tmp->next;
@@ -128,6 +132,54 @@ char **get_full_cmd(t_lex *start,int args)
 	 return(i+1);
  }
 
+void	free_double_ptr(char **str)
+{
+	int i = 0;
+	while(str && str[i])
+	{
+		free(str[i]);
+		i++;
+	}
+	free(str);	
+}
+
+void	free_redir(t_red *red)
+{
+	t_red *tmp;
+	while(red)
+	{
+		tmp = red;
+		red = red->next;
+		free(tmp->file);
+		free(tmp);
+	}
+}
+
+void	ft_free(t_lex *lexer, t_pars *parser)
+{
+	t_lex *tmp;
+	t_pars *tmp2;
+	if(parser->args_num == 0)
+		lexer = NULL;
+	while(lexer )
+	{
+		tmp = lexer;
+		lexer = lexer->next;
+		free(tmp->content);
+		free(tmp);
+	}
+	if(parser)
+		free_redir(parser->red);
+	while(parser)
+	{
+		tmp2 = parser;
+		parser = parser->next;
+		free_double_ptr(tmp2->full_cmd);
+		free(tmp2);
+	}
+}
+
+
 int main(int ac, char **av, char **environ)
 {
 	t_lex *lexer = NULL;
@@ -144,10 +196,18 @@ int main(int ac, char **av, char **environ)
     {
         input = readline("\e[1;53mMiniShell$ \e[0m");
 		add_history(input);
+		if (input == NULL || ft_strlen(input) == 0)
+		{
+			free(input);
+			continue;
+		}
 		lexer = ft_lexer(input);
 		lexer = ft_clean(lexer,env);
 		parser = ft_parser(lexer);
+		// if(parser->args_num == 0)
+		// 	lexer = NULL;
 		ft_builtins(parser,env);
+		ft_free(lexer,parser);
 		free(input);
     }
     return 0;

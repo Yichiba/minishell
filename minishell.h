@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/27 22:59:58 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/04 12:52:36 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <string.h>
+# include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h> 
 
@@ -97,11 +98,13 @@ t_pars	*add_new_node(t_lex *start,int args);
 int 	ft_count_args(t_lex *start);
 t_lex	*ft_clean(t_lex *lexer,t_env *env);
 
-
+char	*ft_getenv(t_env *env, char *var);
+t_env* ft_remove_node(t_env* env, char* data);
+int		ft_strcmp(char *str, char *ptr);
+int		variable_syntax(char *str);
 
 t_env	*ft_builtins( t_pars *parser, t_env *env);
 int		ft_strcmp(char *str, char *ptr);
-
 
 
 char	*ft_dollar(char *input, int *i);
@@ -109,6 +112,7 @@ char	*ft_strdup(char *str);
 t_lex	*ft_add(t_lex *lex, char *content, enum e_token type);
 char	*ft_same_type(char *input, int *i);
 t_lex	*ft_set_state(t_lex *lexer);
+int		ft_atoi(char *str);
 int		ft_alpha(char str);
 int		ft_num(char str);
 char	*set_var(char *input,int *i);
@@ -116,15 +120,29 @@ char	*get_state(enum e_state state);
 char	*get_type(enum e_token token);
 int		ft_strlen(char *str);
 char	*ft_strjoin(char *str, char *tab);
-t_lex	*ft_join(t_lex *tmp, t_lex *next);
 t_lex	*remove_node(t_lex *lex, t_lex *node);
 t_lex	*ft_remove_quote(t_lex *lexer);
 t_lex	*ft_remove_space(t_lex *lexer);
 t_red	*ft_add_red(t_red *red, char *file, int type);
 int		ft_syntax_redir(t_lex *lexer);
-t_red	*ft_red(t_lex *lexer);
+t_red	*ft_red(t_lex *lexer,t_lex **start);
 char	**get_full_cmd(t_lex *start,int args);
 int		count_pipes(t_lex *lexer);
 
 
+int		ft_redirections(t_red * red,int *stdin,int *stdout);
+void    close_file(int file, t_red *red,int *stdin,int *stdout);
+
+
+void	ft_free(t_lex *lexer, t_pars *parser);
+
+
+
+t_env   *find_commands(t_env *env,t_pars *parser);
+char 	**ft_split(char *str, char sep);
+char 	*substr(char *str,int start, int end);
+int 	ft_count(char *str,char sep);
+char    **ft_env_to_tab(t_env *env);
+
+void crate_pipe(t_pars *pars, t_lex *l, t_env *env);
 #endif
