@@ -6,11 +6,28 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:38:58 by yichiba           #+#    #+#             */
-/*   Updated: 2023/07/27 12:57:14 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/05 20:29:58 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void *ptr;
+	unsigned long	i;
+
+	i = 0;
+	ptr = malloc(count * size);
+	if(ptr == NULL)
+		return(NULL);
+	while(i < count * size)
+	{
+		((char *)ptr)[i] = 0;
+		i++;
+	}
+	return(ptr);
+}
 
 char *set_variables_name(char*str)
 {
@@ -18,7 +35,7 @@ char *set_variables_name(char*str)
 	int i = 0;
 		while(str[i] && str[i] != '=')
 			i++;
-		tab = malloc(i+1);
+		tab = ft_calloc(i+1, sizeof(char));
 		i = 0;
 		while(str[i] && str[i] != '=')
 			{
@@ -38,7 +55,7 @@ char *set_value(char*str)
 			i++;
 		if(str[i] == '\0')
 			return(NULL);
-		tab = malloc(strlen(str) - i);
+		tab = ft_calloc(strlen(str) - i, sizeof(char));
 		i++;
 		while(str[i])
 				tab[j++] = str[i++];
@@ -50,7 +67,7 @@ t_env *ft_add_back(char *str)
 {
 	t_env *node;
 
-	node = malloc(sizeof(t_env));
+	node = ft_calloc(1, sizeof(t_env));
 	node->var = set_variables_name(str);
 	node->str = set_value(str);
 	node->next = NULL;

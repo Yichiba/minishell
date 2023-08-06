@@ -6,3 +6,15 @@
 // leaks
 // norminette
 //signals
+
+
+
+echo $""USER""
+echo $''USER''
+echo "$"USER
+echo $USER$'USER'
+ export va1r=""
+
+echo $USER$'USER'
+$var
+echo $test test

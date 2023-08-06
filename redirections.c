@@ -6,23 +6,23 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:58:55 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/04 16:00:42 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/05 12:40:53 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	close_file(int file, t_red *red, int *stdin, int *stdout)
+void	close_file(t_red *red,t_file *fide)
 {
 	if (red->type == REDIR_OUT || red->type == DREDIR_OUT)
 	{
-		close(file);
-		dup2(*stdout, 1);
+		close(fide->file);
+		dup2(fide->std_out, 1);
 	}
 	if (red->type == REDIR_IN)
 	{
-		dup2(*stdin, 0);
-		close(file);
+		dup2(fide->std_in,0);
+		close(fide->file);
 	}
 }
 
@@ -37,7 +37,7 @@ int	ft_red_out(char *file_name, int file, int *stdout)
 	return (file);
 }
 
-int	ft_red_in(char *file_name, int file, int *stdin)
+int	ft_red_in(char *file_name, int file, int *std_in)
 {
 	(void)stdin;
 	if (file != -1)
@@ -48,9 +48,9 @@ int	ft_red_in(char *file_name, int file, int *stdin)
 		printf("minishell: %s: No such file or directory\n", file_name);
 		return (-5);
 	}
-	// if(*stdin == -1)
-	//     *stdin = dup(0);
-	// file = dup2(file,0);
+	if(*std_in == -1)
+	    *std_in = dup(0);
+	file = dup2(file,0);
 	return (file);
 }
 
@@ -64,8 +64,18 @@ int	ft_double_red_out(char *file_name, int file, int *stdout)
 	file = dup2(file, 1);
 	return (file);
 }
+int		ft_here_doc(char *file_name, int file, int *stdout)
+{
+	if (file != -1)
+		close(file);
+	file = open(file_name, O_RDWR | O_APPEND | O_CREAT, 0777);
+	if (*stdout == -1)
+		*stdout = dup(1);
+	file = dup2(file, 1);
+	return (file);
+}
 
-int	ft_redirections(t_red *red, int *stdin, int *stdout)
+int	ft_redirections(t_red *red,t_file *fide)
 {
 	t_red	*tmp;
 	int		file;
@@ -75,15 +85,15 @@ int	ft_redirections(t_red *red, int *stdin, int *stdout)
 	while (tmp)
 	{
 		if (tmp->type == REDIR_OUT)
-			file = ft_red_out(tmp->file, file, stdout);
+			file = ft_red_out(tmp->file, file, &fide->std_out);
 		else if (tmp->type == REDIR_IN)
-			file = ft_red_in(tmp->file, file, stdin);
+			file = ft_red_in(tmp->file, file, &fide->std_in);
 		else if (tmp->type == DREDIR_OUT)
-			file = ft_double_red_out(tmp->file, file, stdout);
+			file = ft_double_red_out(tmp->file, file, &fide->std_out);
 		if(file == -5)
 			return(-5);
 		// if(red->type == HERE_DOC)
-		//     ft_red_out(red->file);
+		//     ft_herdoc(tmp->file, file, &fide->std_out);
 		tmp = tmp->next;
 	}
 	return (file);

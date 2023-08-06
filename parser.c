@@ -6,32 +6,12 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 13:17:12 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/04 15:46:15 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/06 12:01:35 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_syntax_pipe(t_lex * lexer)
- {
-	 t_lex *tmp;
-	 tmp = lexer;
-	 if(tmp->type == PIPE )
-	 	return(0);
-	 while(tmp && tmp->next)
-	 {
-		 if(tmp->type == PIPE)
-		 {
-			 if(tmp->next->type != WORD )
-				return(0);
-		 }
-		 tmp = tmp->next;
-	 }
-	 
-	 if(tmp->type == PIPE)
-	 	return(0);
-	 return(1);
- }
 int ft_count_args(t_lex *start)
 {
 	int i = 0;
@@ -67,7 +47,7 @@ t_pars	*add_new_node(t_lex *start,int args)
 {
 		t_pars *parser = NULL;
 		t_lex *start1;
-		parser = malloc(sizeof(t_pars));
+		parser = ft_calloc(sizeof(t_pars), 1);
 		parser->full_cmd = NULL;
 		parser->red = ft_red(start,&start1);
 		if(args)

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:57:51 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/02 11:21:17 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/06 14:13:48 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*ft_strdup(char *str)
 	int		i;
 
 	i = 0;
-	tab = malloc(ft_strlen(str) + 1);
+	tab = ft_calloc(ft_strlen(str) + 1, sizeof(char));
 	while (str[i])
 	{
 		tab[i] = str[i];
@@ -73,7 +73,7 @@ char	*ft_same_type(char *input, int *i)
 		+ j] != '\'' && input[*i + j] != '\"' && input[*i + j] != '$'
 		&& input[*i + j] != '|' && input[*i + j] != '<' && input[*i + j] != '>')
 		j++;
-	str = malloc(j + 1);
+	str = ft_calloc(j + 1, sizeof(char));
 	j = 0;
 	while (input[*i] != ' ' && input[*i] != '\0' && input[*i] != '\''
 		&& input[*i] != '\"' && input[*i] != '$' && input[*i] != '|'
@@ -90,7 +90,7 @@ t_lex	*ft_add(t_lex *lex, char *content, enum e_token type)
 	t_lex	*new;
 
 	tmp = lex;
-	new = malloc(sizeof(t_lex));
+	new = ft_calloc(1, sizeof(t_lex));
 	new->content = content;
 	new->type = type;
 	new->state = GENERAL;
@@ -107,6 +107,7 @@ t_lex	*ft_lexer(char *input)
 {
 	int i;
 	t_lex *lexer = NULL;
+	
 
 	i = 0;
 	while (input[i])
@@ -118,7 +119,7 @@ t_lex	*ft_lexer(char *input)
 		else if (input[i] == '\"')
 			lexer = ft_add(lexer, ft_strdup("\""), DOUBLE_QUOTE);
 		else if (input[i] == '$')
-			lexer = ft_add(lexer, ft_dollar(input, &i), VAR);
+ 				lexer = ft_add(lexer, ft_dollar(input, &i), VAR);
 		else if (input[i] == '|')
 			lexer = ft_add(lexer, ft_strdup("|"), PIPE);
 		else if (input[i + 1] && input[i] == '<' && input[i + 1] == '<' && i++)
@@ -133,6 +134,6 @@ t_lex	*ft_lexer(char *input)
 			lexer = ft_add(lexer, ft_same_type(input, &i), WORD);
 		i++;
 	}
-	lexer = ft_set_state(lexer);
+	lexer = ft_set_state(lexer);	
 	return (lexer);
 }

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 16:03:46 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/04 12:30:20 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/05 19:06:49 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char *ft_strjoiin(char *str, char *tab,int flag)
 	int i = 0;
 	int j = 0;
 	char *tmp;
-	tmp = malloc(ft_strlen(str) + ft_strlen(tab) + 2);
+	tmp = ft_calloc(ft_strlen(str) + ft_strlen(tab) + 2, sizeof(char));
 	while(str && str[i])
 	{
 		tmp[i] = str[i];
@@ -49,7 +49,7 @@ char    **ft_env_to_tab(t_env *env)
         i++;
         tmp = tmp->next;
     }
-    tab = malloc((i + 1) * sizeof(char *));
+    tab = ft_calloc((i + 1) , sizeof(char *));
     tmp = env;
     i = 0;
     while(tmp)
@@ -80,7 +80,7 @@ char *ft_substr(char *str,int start, int end)
     char *tab;
     int i  = start;
    
-    tab = malloc(end - start +1);
+    tab = ft_calloc(end - start +1, sizeof(char));
     i = 0;
     while(str[start] && start < end)
        {
@@ -100,14 +100,16 @@ char **ft_split(char *str, char sep)
     i = 0;
     
     int counter = 0;
-    tab = malloc(sizeof(char *)*ft_count(str,':')+1);
-    while(str[i])
+    tab = ft_calloc(sizeof(char *),ft_count(str,':')+1);
+    while(str && str[i])
     {
         if(str[i] == sep)
         {
             tab[counter++] = ft_substr(str,start,i);
             start = i+1;
         }
+        if(str[i+1] == '\0')
+            tab[counter++] = ft_substr(str,start,i+1);
         i++;
     }
     tab[counter] = NULL;
@@ -119,6 +121,8 @@ char *ft_access(char ** tab,char *cmd)
 {
     char *path =NULL;
     int i = 0;
+    if(access(cmd,F_OK) == 0)
+            return(cmd);
     while(tab[i])
     {
         path = ft_strjoiin(tab[i],cmd,0);
@@ -166,11 +170,10 @@ t_env   *find_commands(t_env *env,t_pars *parser)
     }
     env_tab = ft_env_to_tab(env);
     path_tab = ft_split(path,':');
-    path = ft_access(path_tab,parser->full_cmd[0]);
-    
+    path = ft_access(path_tab,parser->full_cmd[0]); 
     if(path)
-       ft_excute_cmd(path,parser->full_cmd,env_tab);
-        // execve(path,parser->full_cmd,env_tab);
+        execve(path,parser->full_cmd,env_tab);
+    // ft_excute_cmd(path,parser->full_cmd,env_tab);
     // free(path);
     // for(int i = 0;path_tab[i];i++)
     //     free(path_tab[i]);

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:04:45 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/02 14:09:38 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/05 14:27:04 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,9 @@ int	variable_syntax(char *str)
 	i = 0;
 	while (str[i] && str[i] != '=')
 	{
-		if (!(str[i] >= 'a' && str[i] <= 'z') && !(str[i] >= 'A'
-				&& str[i] <= 'Z') && !(str[i] >= '0' && str[i] <= '9')
-			&& str[i] != '_')
+		if(i == 0 && (str[i] >= '0' && str[i] <= '9'))
+			return (1);
+		if (!ft_alpha(str[i]) && !ft_num(str[i])  && str[i] != '_')
 			return (1);
 		i++;
 	}

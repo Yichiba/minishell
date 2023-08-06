@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:13:37 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/04 15:10:58 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/06 12:01:20 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 t_red	*ft_add_red(t_red *red, char *file, int type)
 {
-	t_red *new = malloc(sizeof(t_red));
+	t_red *new = ft_calloc(1, sizeof(t_red));
 	if (!new)
 		return red;
 	new->file = ft_strdup(file);
@@ -62,27 +62,27 @@ t_red *ft_red(t_lex *lexer,t_lex **start)
 	return red;
 }
 
-int		ft_syntax_redir(t_lex *lexer)
-{
-	t_lex *tmp;
-	tmp  = lexer;
-	t_lex *start;
-	while(tmp && tmp->next)
-	{
-		start = tmp;
-		if(tmp->type == REDIR_IN || tmp->type == REDIR_OUT || tmp->type == DREDIR_OUT || tmp->type == HERE_DOC)
-			if (!tmp->next || (tmp->next->type != WORD && tmp->next->type != VAR))
-				{
-					printf("syntax error near unexpected token `%s'\n", tmp->next->content);
-					return(0);
-				}
+// int		ft_syntax_redir(t_lex *lexer)
+// {
+// 	t_lex *tmp;
+// 	tmp  = lexer;
+// 	t_lex *start;
+// 	while(tmp && tmp->next)
+// 	{
+// 		start = tmp;
+// 		if(tmp->type == REDIR_IN || tmp->type == REDIR_OUT || tmp->type == DREDIR_OUT || tmp->type == HERE_DOC)
+// 			if (!tmp->next || (tmp->next->type != WORD && tmp->next->type != VAR))
+// 				{
+// 					printf("syntax error near unexpected token `%s'\n", tmp->next->content);
+// 					return(0);
+// 				}
 		  	
-		tmp = tmp->next;
-	}
-	if(tmp->type == REDIR_IN || tmp->type == REDIR_OUT || tmp->type == DREDIR_OUT || tmp->type == HERE_DOC)
-	{
-		printf("syntax error near unexpected token `%s'\n", tmp->content);
-		return(0);
-	}
-	return(1);
-}
+// 		tmp = tmp->next;
+// // 	}
+// 	if(tmp->type == REDIR_IN || tmp->type == REDIR_OUT || tmp->type == DREDIR_OUT || tmp->type == HERE_DOC)
+// 	{
+// 		printf("syntax error near unexpected token `%s'\n", tmp->content);
+// 		return(0);
+// 	}
+// 	return(1);
+// }

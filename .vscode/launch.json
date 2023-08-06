@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/yichiba/Desktop/newshel copy",
-      "program": "/Users/yichiba/Desktop/newshel copy/build/Debug/outDebug"
+      "cwd": "/Users/yichiba/Desktop/minishell",
+      "program": "/Users/yichiba/Desktop/minishell/build/Debug/outDebug"
     }
   ]
 }
