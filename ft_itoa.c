@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 10:06:33 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/05 17:40:05 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/07 14:17:11 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,4 +56,52 @@ char	*ft_itoa(int n)
 	if (n < 10)
 		str[sl] = n + '0';
 	return (str);
+}
+char	*ft_strchr(const char *s, int c)
+{
+	int i;
+	
+	i = 0;
+	while(s[i])
+	{
+		if(s[i] == c)
+			return((char *)&s[i]);
+		i++;
+	}
+	if(s[i] == c)
+		return((char *)&s[i]);
+	return(NULL);
+}
+
+char *ft_trim(char *str)
+{
+	int i = 0;
+	int j = 0;
+	int start;
+	char *new;
+	while(str[i] == ' ')
+		i++;
+	start = i;
+	while(str[i])
+		{
+			if((str[i] == ' ' && str[i+1] == ' ') || (str[i] == ' ' && str[i+1] == '\0'))
+				i++;
+			else
+			{
+				j++;
+				i++;
+			}
+		}
+	new = (char *)malloc(j + 1);
+	i = start;
+	j = 0;
+	while(str[i])
+	{
+		if((str[i] == ' ' && str[i+1] == ' ') || (str[i] == ' ' && str[i+1] == '\0'))
+			i++;
+		else
+				new[j++] = str[i++];	
+	}
+	new[j] = '\0';
+	return(new);
 }

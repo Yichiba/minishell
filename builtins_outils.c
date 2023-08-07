@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:04:45 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/05 14:27:04 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/06 16:52:27 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,8 @@ int	ft_strcmp(char *str, char *ptr)
 		return (0);
 	while (str[i] || ptr[i])
 	{
+		if (str[i] != ptr[i] && str[i] == 'n')
+			break;
 		if (str[i] != ptr[i])
 			return (0);
 		i++;
@@ -98,7 +100,7 @@ int	ft_strcmp(char *str, char *ptr)
 	while (str[i] == 'n')
 		i++;
 	if (str[i] == '\0')
-		return (1);
+			return (1);
 	return (0);
 }
 

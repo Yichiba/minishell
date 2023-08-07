@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:38:58 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/05 20:29:58 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/07 20:50:01 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	*ft_calloc(size_t count, size_t size)
 
 char *set_variables_name(char*str)
 {
-	char *tab;
+	char *tab = NULL;
 	int i = 0;
 		while(str[i] && str[i] != '=')
 			i++;

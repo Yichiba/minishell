@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/06 12:03:41 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/07 20:56:03 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,8 +100,9 @@ void	ft_print_red(t_red *red);
 void	ft_print_env(t_env *env);
 void 	ft_print_parser(t_pars *parser);
 
-
-
+char	*ft_strchr(const char *s, int c);
+char 	*ft_substr(char *str,int start, int end);
+char 	*ft_trim(char *str);
 t_lex	*ft_lexer(char *input);
 t_pars	*ft_parser(t_lex *lexer);
 t_lex	*ft_syntax_pipe(t_lex * lexer);
@@ -150,6 +151,7 @@ void	ft_free(t_lex *lexer, t_pars *parser);
 
 char	*ft_itoa(int n);
 
+int 	ft_is_builtins(char *str);
 t_env   *find_commands(t_env *env,t_pars *parser);
 char 	**ft_split(char *str, char sep);
 char 	*substr(char *str,int start, int end);

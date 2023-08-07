@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 16:03:46 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/05 19:06:49 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/07 12:34:10 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ char    **ft_env_to_tab(t_env *env)
     tmp = env;
     while(tmp)
     {
-        i++;
+        if(tmp->var && tmp->str)
+            i++;
         tmp = tmp->next;
     }
     tab = ft_calloc((i + 1) , sizeof(char *));
@@ -54,8 +55,11 @@ char    **ft_env_to_tab(t_env *env)
     i = 0;
     while(tmp)
     {
-        tab[i] = ft_strjoiin(tmp->var,tmp->str,1);
-        i++;
+        if(tmp->var && tmp->str)
+           {
+                tab[i] = ft_strjoiin(tmp->var,tmp->str,1);
+                i++;
+           }
         tmp = tmp->next;
     }
     tab[i] = NULL;
@@ -126,29 +130,18 @@ char *ft_access(char ** tab,char *cmd)
     while(tab[i])
     {
         path = ft_strjoiin(tab[i],cmd,0);
+        
         if(access(path,F_OK) == 0)
-                return(path);
+                {
+                    // printf("path = %s\n",path);
+                    return(path);
+                }
         free(path);
         i++;
     }
-    printf(" Minishell: %s : command not found.\n", cmd);
+    printf("minishell: %s: command not found\n",cmd);
+    exit(127);
     return(NULL);
-}
-
-
-void    ft_excute_cmd(char *path,char **cmd,char **env)
-{
-    pid_t   pid ;
-    int     status;
-    pid = fork();
-    if(pid == 0)
-    {
-        execve(path,cmd,env);
-    }
-    else
-    {
-        waitpid(pid,&status,0);
-    }
 }
 
 t_env   *find_commands(t_env *env,t_pars *parser)
@@ -159,27 +152,24 @@ t_env   *find_commands(t_env *env,t_pars *parser)
     t_env *tmp = NULL;
     char **path_tab;
     tmp = env;
+    // if(ft_is_builtins(parser->full_cmd[0]))
+	// 			{
+    //                 ft_builtins(parser, env);
+    //                 exit(0);
+    //             }
     while(tmp)
-    {
-        if(tmp->var && ft_strcmp(tmp->var,"PATH"))
-        {
-            path = tmp->str;
-            break;
-        }
-        tmp = tmp->next;
-    }
-    env_tab = ft_env_to_tab(env);
-    path_tab = ft_split(path,':');
-    path = ft_access(path_tab,parser->full_cmd[0]); 
-    if(path)
-        execve(path,parser->full_cmd,env_tab);
-    // ft_excute_cmd(path,parser->full_cmd,env_tab);
-    // free(path);
-    // for(int i = 0;path_tab[i];i++)
-    //     free(path_tab[i]);
-    // free(path_tab);
-    // for(int i = 0;env_tab[i];i++)
-    //     free(env_tab[i]);
-    // free(env_tab);
+            {
+                if(tmp->var && ft_strcmp(tmp->var,"PATH"))
+                {
+                    path = tmp->str;
+                    break;
+                }
+                tmp = tmp->next;
+            }
+        env_tab = ft_env_to_tab(env);
+        path_tab = ft_split(path,':');
+        path = ft_access(path_tab,parser->full_cmd[0]); 
+        if(path)
+            execve(path,parser->full_cmd,env_tab);
     return(env);
 }

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/05 22:09:06 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/07 22:05:20 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ char *ft_dollar(char *input, int *i)
 		(*i)++;
 		if(input[*i] == '$')
 			return(ft_strdup("$$"));
+		if(input[*i] == '@')
+			return(ft_strdup(""));
 		else if(input[*i] == '?')
 			return(ft_strdup("$?"));
-		else if(input[*i] == ' ')
-			return(ft_strdup("$ "));
 		else if(ft_num(input[*i]))
 		{
 			var[0] = '$';
@@ -218,5 +218,5 @@ int main(int ac, char **av, char **environ)
 		ft_free(lexer,parser);
 		free(input);
     }
-    return 0;
+    return (g_exit);
 }

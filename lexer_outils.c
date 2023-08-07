@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:10:17 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/06 14:14:33 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/07 22:22:48 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ t_lex	*ft_remove_quote(t_lex *lexer)
 	tmp = lexer;
 	while(tmp)
 	{
-			tmp2 = tmp->next;
+		tmp2 = tmp->next;
 		if(tmp->type == QUOTE || tmp->type == DOUBLE_QUOTE )
 			lexer = remove_node(lexer,tmp);
 			tmp = tmp2;
@@ -31,6 +31,13 @@ t_lex	*ft_remove_quote(t_lex *lexer)
 			{
 				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
 				lexer = remove_node(lexer,tmp->next);
+				tmp = lexer;
+			}
+		else if((tmp->type == WORD && tmp->state == IN_DQUOTE ) && (tmp->next->type == WORD && tmp->next->state == IN_DQUOTE))
+			{
+				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
+				lexer = remove_node(lexer,tmp->next);
+				tmp = lexer;
 			}
 		tmp = tmp->next;
 	}
@@ -108,7 +115,6 @@ char *look_for_var(t_env *env,char *var_name)
 	return(ft_strdup(""));
 }
 
-
 t_lex	*ft_expand_variables(t_lex	*lexer,t_env	*env)
 {
 	t_lex	*tmp;
@@ -131,12 +137,21 @@ t_lex	*ft_expand_variables(t_lex	*lexer,t_env	*env)
 					tmp->content = ft_itoa(g_exit);
 					tmp->type = WORD;
 				}
-				else
+				else if(tmp->state == IN_DQUOTE)
 				{
 					var_name = ft_strdup(tmp->content +1);
 					free(tmp->content);
 					var_value = look_for_var(env,var_name);
-					tmp->content = ft_strdup(var_value);
+					tmp->content = var_value;
+					tmp->type = WORD;
+				}
+				else 
+				{
+					//Different output in tes echo $@1; echo "$@1"
+					var_name = ft_strdup(tmp->content +1);
+					free(tmp->content);
+					var_value = ft_trim(look_for_var(env,var_name));
+					tmp->content = var_value;
 					tmp->type = WORD;
 				}
 			}
@@ -148,9 +163,8 @@ t_lex	*ft_expand_variables(t_lex	*lexer,t_env	*env)
 t_lex *ft_clean(t_lex *lexer,t_env *env)
 {
 	t_lex *tmp;
-	
-	lexer = ft_remove_quote(lexer);
 	lexer = ft_expand_variables(lexer,env);
+	lexer = ft_remove_quote(lexer);
 	tmp  = lexer;
 	while(tmp && tmp->next)
 	{

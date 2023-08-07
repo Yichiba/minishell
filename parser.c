@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 13:17:12 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/06 12:01:35 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/07 19:22:32 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ t_pars *ft_parser(t_lex *lexer)
 	t_lex	*start;
 	t_pars	*head;
 	t_lex	*ptr;
-
 	
 	start = lexer;
 	ptr = lexer;
@@ -83,6 +82,7 @@ t_pars *ft_parser(t_lex *lexer)
 		}
 		ptr = ptr->next;
 	}
+	
 	return(head);
 }
 
