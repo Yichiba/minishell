@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 21:47:14 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/07 22:10:13 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/09 12:06:18 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -278,7 +278,7 @@ int ft_is_builtins(char *str)
 		return(0);
 }
 
-void	ft_wait(t_pars *parser,int *pids)
+void	ft_wait(t_global global, t_pars *parser)
 {
 	int	status;
 
@@ -286,18 +286,18 @@ void	ft_wait(t_pars *parser,int *pids)
 	int i = 0;
 	while (tmp)
 	{
-		waitpid(pids[i], &status, 0);
+		waitpid(global.pids[i], &status, 0);
 		i++;
 		tmp = tmp->next;
 	}
 	g_exit = status >> 8;
 }
-void	ft_pipe(int i,int *id,t_pars *tmp,t_env *env,int *fd)
+void	ft_pipe(int i,int id,t_pars *tmp,t_env *env,int *fd)
 {
 	if (i > 0)
 	{
-		dup2(*id, 0);
-		close (*id);
+		dup2(id, 0);
+		close (id);
 	}
 	if (tmp->next)
 	{
@@ -314,78 +314,65 @@ void	ft_pipe(int i,int *id,t_pars *tmp,t_env *env,int *fd)
 		find_commands(env, tmp);
 }
 
+void	_execution(t_global *global, t_pars *tmp, int i)
+{
+	if (tmp->red)
+		global->fide.file = ft_redirections(tmp->red, &global->fide);
+	if (tmp->next)
+		pipe(global->fd);
+	global->pids[i] = fork();
+	if (global->pids[i] == 0)
+		ft_pipe(i, global->id, tmp, global->env, global->fd);
+	if (i > 0)
+		close (global->id);
+	if (tmp->next)
+	{
+		global->id = global->fd[0];
+		close (global->fd[1]);
+	}
+	if (tmp->red)
+		close_file(tmp->red, &global->fide);
+}
+
+void	initialisation(t_global *global)
+{
+	global->fide.file = -1;
+	global->fide.std_in = -1;
+	global->fide.std_out = -1;
+	global->id = -1;
+	global->pids = malloc(sizeof(int) * 100);
+}
+
 t_env *ft_excutions(t_pars *parser, t_env *env)
 {
-	t_file fide;
-	fide.file = -1;
-	fide.std_in = -1;
-	fide.std_out = -1;
-	int fd[2];
-	int id = -1;
-	t_pars *tmp;
-	int	i;
-	int	pids[10];
-
+	t_global	global;
+	t_pars		*tmp;
+	
+	int		i;
+	
 	i = 0;
 	tmp = parser;
+	initialisation(&global);
+	global.env = env;
 	while (tmp)
 	{
 		if (!tmp || tmp->args_num == 0)
 			return (env);
 		if(ft_is_builtins(tmp->full_cmd[0]) && !tmp->next)
-			{
-				if (tmp->red)
-					fide.file = ft_redirections(tmp->red, &fide);
-				ft_builtins(tmp, env);
-				if (tmp->red)
-					close_file(tmp->red, &fide);
-				return (env);
-			}
-		else
 		{
-			if (tmp->next)
-				pipe(fd);
-			pids[i] = fork();
-			if (pids[i] == 0)
-				{
-					if (i > 0)
-					{
-						dup2(id, 0);
-						close (id);
-					}
-					if (tmp->next)
-					{
-						dup2(fd[1], 1);
-						close (fd[1]);
-						close (fd[0]);
-					}
-					if(ft_is_builtins(tmp->full_cmd[0]))
-					{
-						if (tmp->red)
-						fide.file = ft_redirections(tmp->red, &fide);	
-						ft_builtins(tmp, env);
-						if (tmp->red)
-							close_file(tmp->red, &fide);
-						exit(0);
-					}
-					else
-						find_commands(env, tmp);
-				}
-				// ft_pipe(i,&id,tmp,env,fd);
-			if (i > 0)
-				close (id);
-			if (tmp->next)
-			{
-				id = fd[0];
-				close (fd[1]);
-			}
+			if (tmp->red)
+				global.fide.file = ft_redirections(tmp->red, &global.fide);
+			ft_builtins(tmp, env);
+			if (tmp->red)
+				close_file(tmp->red, &global.fide);
+			return (env);
 		}
-		if (tmp->red)
-			close_file(tmp->red, &fide);
-		i++;
-		tmp = tmp->next;
+		else
+			_execution(&global, tmp, i);
+		tmp = ((i++), tmp->next);
 	}
 	if(parser)
-		ft_wait(parser,pids);
+		ft_wait(global, parser);
+	
 	return (env);
 }

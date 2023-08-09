@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 16:03:46 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/07 12:34:10 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/09 11:59:43 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,12 +130,11 @@ char *ft_access(char ** tab,char *cmd)
     while(tab[i])
     {
         path = ft_strjoiin(tab[i],cmd,0);
-        
         if(access(path,F_OK) == 0)
-                {
-                    // printf("path = %s\n",path);
-                    return(path);
-                }
+        {
+            // printf("path = %s\n",path);
+            return(path);
+        }
         free(path);
         i++;
     }
@@ -158,18 +157,20 @@ t_env   *find_commands(t_env *env,t_pars *parser)
     //                 exit(0);
     //             }
     while(tmp)
-            {
-                if(tmp->var && ft_strcmp(tmp->var,"PATH"))
-                {
-                    path = tmp->str;
-                    break;
-                }
-                tmp = tmp->next;
-            }
-        env_tab = ft_env_to_tab(env);
-        path_tab = ft_split(path,':');
-        path = ft_access(path_tab,parser->full_cmd[0]); 
-        if(path)
-            execve(path,parser->full_cmd,env_tab);
+    {
+        if(tmp->var && ft_strcmp(tmp->var,"PATH"))
+        {
+            path = tmp->str;
+            break;
+        }
+        tmp = tmp->next;
+    }
+    env_tab = ft_env_to_tab(env);
+    path_tab = ft_split(path,':');
+    path = ft_access(path_tab,parser->full_cmd[0]); 
+    if(path)
+    {
+        execve(path,parser->full_cmd,env_tab);
+    }
     return(env);
 }

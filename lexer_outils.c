@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:10:17 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/07 22:22:48 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/09 10:59:33 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,8 @@ t_lex	*ft_expand_variables(t_lex	*lexer,t_env	*env)
 					//Different output in tes echo $@1; echo "$@1"
 					var_name = ft_strdup(tmp->content +1);
 					free(tmp->content);
-					var_value = ft_trim(look_for_var(env,var_name));
+					var_value = ft_trim(ft_strdup(look_for_var(env,var_name)),' ');
+					var_value = ft_trim(var_value ,'	');
 					tmp->content = var_value;
 					tmp->type = WORD;
 				}
@@ -170,15 +171,26 @@ t_lex *ft_clean(t_lex *lexer,t_env *env)
 	{
 		
 		if(tmp->type == VAR && tmp->next->type == WORD)
-				tmp->content = ft_strjoin(tmp->content, tmp->next->content);	
+				{
+					tmp->content = ft_strjoin(tmp->content, tmp->next->content);	
+					lexer = remove_node(lexer, tmp->next);
+				}	
 		else if(tmp->state == IN_QUOTE && tmp->next->state == IN_QUOTE)
-				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
+				{
+					tmp->content = ft_strjoin(tmp->content, tmp->next->content);
+					lexer = remove_node(lexer, tmp->next);
+				}	
 		else if(tmp->state == IN_DQUOTE && tmp->type != VAR && tmp->next->type != VAR && tmp->next->state == IN_DQUOTE ) //watch out  ,i removed lexer = remove_node(lexer, tmp->next);from all conditions
-				tmp->content = ft_strjoin(tmp->content, tmp->next->content);	
+				{
+					tmp->content = ft_strjoin(tmp->content, tmp->next->content);	
+					lexer = remove_node(lexer, tmp->next);
+				}	
 		else if(tmp->type == WORD && tmp->next->type == WORD)
-				tmp->content = ft_strjoin(tmp->content, tmp->next->content);
-		lexer = remove_node(lexer, tmp->next);	
-		// else
+				{
+					tmp->content = ft_strjoin(tmp->content, tmp->next->content);
+					lexer = remove_node(lexer, tmp->next);
+				}	
+		else
 			tmp = tmp->next;
 	}
 	lexer = ft_remove_space(lexer);

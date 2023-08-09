@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/07 20:56:03 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/09 12:05:31 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,14 @@ typedef struct s_red
 	struct s_red *next;
 }t_red;
 
+typedef struct s_file
+{
+	int std_out;
+	int std_in;
+	int file;
+	int i;
+}t_file;
+
 typedef struct s_pars
 {
 	char	**full_cmd;
@@ -75,13 +83,14 @@ typedef struct s_pars
 	struct s_pars *next;
 }t_pars;
 
-typedef struct s_file
+typedef struct s_global
 {
-	int std_out;
-	int std_in;
-	int file;
-	int i;
-}t_file;
+	t_env	*env;
+	t_file	fide;
+	int		fd[2];
+	int		id;
+	int		*pids;
+}	t_global;
 
 int ft_strlen(char *str);
 t_env	*get_env(char **tab);
@@ -102,7 +111,7 @@ void 	ft_print_parser(t_pars *parser);
 
 char	*ft_strchr(const char *s, int c);
 char 	*ft_substr(char *str,int start, int end);
-char 	*ft_trim(char *str);
+char 	*ft_trim(char *str, char sep);
 t_lex	*ft_lexer(char *input);
 t_pars	*ft_parser(t_lex *lexer);
 t_lex	*ft_syntax_pipe(t_lex * lexer);

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 10:06:33 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/07 14:17:11 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/09 11:01:05 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,18 +73,18 @@ char	*ft_strchr(const char *s, int c)
 	return(NULL);
 }
 
-char *ft_trim(char *str)
+char *ft_trim(char *str, char sep)
 {
 	int i = 0;
 	int j = 0;
 	int start;
 	char *new;
-	while(str[i] == ' ')
+	while(str[i] == sep)
 		i++;
 	start = i;
 	while(str[i])
 		{
-			if((str[i] == ' ' && str[i+1] == ' ') || (str[i] == ' ' && str[i+1] == '\0'))
+			if((str[i] == sep && str[i+1] == sep) || (str[i] == sep && str[i+1] == '\0'))
 				i++;
 			else
 			{
@@ -97,11 +97,16 @@ char *ft_trim(char *str)
 	j = 0;
 	while(str[i])
 	{
-		if((str[i] == ' ' && str[i+1] == ' ') || (str[i] == ' ' && str[i+1] == '\0'))
+		if((str[i] == sep && str[i+1] == sep) || (str[i] == sep && str[i+1] == '\0'))
 			i++;
 		else
 				new[j++] = str[i++];	
 	}
 	new[j] = '\0';
+	if(str)
+	{
+		free(str);
+		str =NULL;
+	}
 	return(new);
 }
