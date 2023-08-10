@@ -6,12 +6,18 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 10:39:33 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/07 22:37:06 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/10 12:43:37 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+int tmp_isredir(t_lex *tmp)
+{
+    if (tmp->type == REDIR_IN || tmp->type == REDIR_OUT || tmp->type == DREDIR_OUT || tmp->type == HERE_DOC)
+        return (1);
+    return (0);
+}
 
 void    ft_free_lex(t_lex *lexer)
 {
@@ -40,7 +46,13 @@ t_lex	*ft_syntax_pipe(t_lex *lexer)
     {
         if (tmp->type == PIPE)
         {
-            if (tmp->next == NULL || tmp->next->type == PIPE || tmp->next->type != WORD )
+            if (!tmp->next )
+            {
+                printf("syntax error near unexpected token `|'\n");
+                ft_free_lex(lexer);
+                return (NULL);
+            }
+            if (!tmp->next &&  tmp->next->type != WORD && !tmp_isredir(tmp->next) )
             {
                 printf("syntax error near unexpected token `|'\n");
                 ft_free_lex(lexer);

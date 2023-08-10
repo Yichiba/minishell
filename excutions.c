@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 21:47:14 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/09 12:06:18 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/10 13:07:49 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,31 @@ void ft_env(t_env *env)
 	}
 	g_exit = 0;
 }
+void	*ft_remove_env(t_env *env, char *var_name)
+{
+	t_env *tmp;
+	t_env *prev;
+
+	tmp = env;
+	prev = NULL;
+	while (tmp)
+	{
+		if (ft_strcmp(tmp->var, var_name))
+		{
+			if (prev == NULL)
+				env = tmp->next;
+			else
+				prev->next = tmp->next;
+			free(tmp->var);
+			free(tmp->str);
+			free(tmp);
+			break;
+		}
+		prev = tmp;
+		tmp = tmp->next;
+	}
+	return (env);
+}
 
 t_env *ft_unset(t_env *env, char **tab)
 {
@@ -138,10 +163,11 @@ t_env *ft_unset(t_env *env, char **tab)
 	char *var_name;
 	while (tab[i])
 	{
-		var_name = set_variables_name(tab[i]);
+		// var_name = set_variables_name(tab[i]); // possible leak , removed
+		var_name = tab[i];
 		if (variable_syntax(var_name) == 0)
 			{
-				env = ft_remove_node(env, var_name);
+				env = ft_remove_env(env, var_name);
 				g_exit = 0;
 			}
 		else
@@ -164,6 +190,7 @@ t_env *ft_pwd(t_env *env)
 	write(1, str, ft_strlen(str));
 	write(1, "\n", 1);
 	g_exit = 0;
+	free(str);
 	return (env);
 }
 
@@ -271,6 +298,7 @@ t_env	*ft_builtins(t_pars *parser,t_env *env)
 
 int ft_is_builtins(char *str)
 {
+	
 	if(ft_strcmp(str,"export") || ft_strcmp(str,"unset") ||ft_strcmp(str,"cd") 
 			||ft_strcmp(str,"pwd") ||ft_strcmp(str,"echo") ||ft_strcmp(str,"env" ) || ft_strcmp(str,"exit"))
 				return(1);
@@ -292,7 +320,7 @@ void	ft_wait(t_global global, t_pars *parser)
 	}
 	g_exit = status >> 8;
 }
-void	ft_pipe(int i,int id,t_pars *tmp,t_env *env,int *fd)
+void	ft_pipe(t_global *global, int i,int id,t_pars *tmp,t_env *env,int *fd)
 {
 	if (i > 0)
 	{
@@ -305,6 +333,8 @@ void	ft_pipe(int i,int id,t_pars *tmp,t_env *env,int *fd)
 		close (fd[1]);
 		close (fd[0]);
 	}
+	if (tmp->red)
+		global->fide.file = ft_redirections(tmp->red, &global->fide);
 	if(ft_is_builtins(tmp->full_cmd[0]))
 	{
 		ft_builtins(tmp, env);
@@ -316,13 +346,13 @@ void	ft_pipe(int i,int id,t_pars *tmp,t_env *env,int *fd)
 
 void	_execution(t_global *global, t_pars *tmp, int i)
 {
-	if (tmp->red)
-		global->fide.file = ft_redirections(tmp->red, &global->fide);
+	// if (tmp->red)
+	// 	global->fide.file = ft_redirections(tmp->red, &global->fide);
 	if (tmp->next)
 		pipe(global->fd);
 	global->pids[i] = fork();
 	if (global->pids[i] == 0)
-		ft_pipe(i, global->id, tmp, global->env, global->fd);
+		ft_pipe(global, i, global->id, tmp, global->env, global->fd);
 	if (i > 0)
 		close (global->id);
 	if (tmp->next)
@@ -334,16 +364,38 @@ void	_execution(t_global *global, t_pars *tmp, int i)
 		close_file(tmp->red, &global->fide);
 }
 
-void	initialisation(t_global *global)
+int		ft_count_cmd(t_pars *parser)
 {
+	int i = 0;
+	t_pars *tmp = parser;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
+}
+
+void	initialisation(t_global *global, t_pars *parser)
+{
+	if(!parser)
+		return ;
 	global->fide.file = -1;
 	global->fide.std_in = -1;
 	global->fide.std_out = -1;
 	global->id = -1;
-	global->pids = malloc(sizeof(int) * 100);
+	if(ft_count_cmd(parser) > 1 || (parser  && !ft_is_builtins(parser->full_cmd[0])))
+		global->pids = malloc(sizeof(int) * (ft_count_cmd(parser)));
+	
 }
 
-t_env *ft_excutions(t_pars *parser, t_env *env)
+void	ft_free_global(t_global *global,t_pars	*parser)
+{
+	(void)parser;
+		free(global->pids);
+}
+
+void	ft_excutions(t_pars *parser, t_env *env)
 {
 	t_global	global;
 	t_pars		*tmp;
@@ -352,12 +404,12 @@ t_env *ft_excutions(t_pars *parser, t_env *env)
 	
 	i = 0;
 	tmp = parser;
-	initialisation(&global);
+	initialisation(&global,parser);
 	global.env = env;
 	while (tmp)
 	{
 		if (!tmp || tmp->args_num == 0)
-			return (env);
+			return;
 		if(ft_is_builtins(tmp->full_cmd[0]) && !tmp->next)
 		{
 			if (tmp->red)
@@ -365,7 +417,7 @@ t_env *ft_excutions(t_pars *parser, t_env *env)
 			ft_builtins(tmp, env);
 			if (tmp->red)
 				close_file(tmp->red, &global.fide);
-			return (env);
+			return;
 		}
 		else
 			_execution(&global, tmp, i);
@@ -373,6 +425,7 @@ t_env *ft_excutions(t_pars *parser, t_env *env)
 	}
 	if(parser)
 		ft_wait(global, parser);
-	
-	return (env);
+	if(ft_count_cmd(parser) > 1 || (parser  && !ft_is_builtins(parser->full_cmd[0])))
+		ft_free_global(&global,parser);
+	return;
 }

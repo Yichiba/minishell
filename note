@@ -1,20 +1,2 @@
-// pipe error
-// redirections error 
-// herdoc
-// check for file permission before open it , ft_access 
-// exit status
-// leaks
-// norminette
-//signals
 
-
-
-echo $""USER""
-echo $''USER''
-echo "$"USER
-echo $USER$'USER'
- export va1r=""
-
-echo $USER$'USER'
-$var
-echo $test test
+echo 1$USER$USER-$

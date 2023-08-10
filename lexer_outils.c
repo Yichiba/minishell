@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:10:17 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/09 10:59:33 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/10 12:07:56 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,8 @@ t_lex	*ft_expand_variables(t_lex	*lexer,t_env	*env)
 					//Different output in tes echo $@1; echo "$@1"
 					var_name = ft_strdup(tmp->content +1);
 					free(tmp->content);
-					var_value = ft_trim(ft_strdup(look_for_var(env,var_name)),' ');
+					var_value = ft_strdup(look_for_var(env,var_name));
+					var_value = ft_trim(var_value,' ');
 					var_value = ft_trim(var_value ,'	');
 					tmp->content = var_value;
 					tmp->type = WORD;

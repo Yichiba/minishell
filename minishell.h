@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/09 12:05:31 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/10 11:55:17 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,7 @@ t_env* ft_remove_node(t_env* env, char* data);
 int		ft_strcmp(char *str, char *ptr);
 int		variable_syntax(char *str);
 
-t_env	*ft_excutions( t_pars *parser, t_env *env);
+void	ft_excutions( t_pars *parser, t_env *env);
 t_env	*ft_builtins( t_pars *parser, t_env *env);
 int		ft_strcmp(char *str, char *ptr);
 
@@ -159,6 +159,7 @@ void    close_file(t_red *red, t_file *fide);
 void	ft_free(t_lex *lexer, t_pars *parser);
 
 char	*ft_itoa(int n);
+int ft_count(char *str,char sep);
 
 int 	ft_is_builtins(char *str);
 t_env   *find_commands(t_env *env,t_pars *parser);
@@ -167,6 +168,6 @@ char 	*substr(char *str,int start, int end);
 int 	ft_count(char *str,char sep);
 char    **ft_env_to_tab(t_env *env);
 t_lex	*ft_syntax(t_lex *lexer);
-void crate_pipe(t_pars *pars, t_lex *l, t_env *env);
+void 	crate_pipe(t_pars *pars, t_lex *l, t_env *env);
 void	*ft_calloc(size_t count, size_t size);
 #endif

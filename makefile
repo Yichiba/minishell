@@ -5,7 +5,7 @@ SRCS = minishell.c enviremenr.c parser.c print.c lexer.c lexer_outils.c pars_red
 
 CC = cc
 
-CFLAGS = -Wall -Werror -Wextra #-fsanitize=address -g
+CFLAGS = #-Wall -Werror -Wextra -fsanitize=address -g
 # CFLAGS = -fsanitize=address -g
 
 
