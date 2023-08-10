@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:58:55 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/06 18:31:55 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/10 16:58:22 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ int	ft_red_in(char *file_name, int file, int *std_in)
 		printf("minishell: %s: No such file or directory\n", file_name);
 		return (-5);
 	}
-	if(*std_in == -1)
-	    *std_in = dup(0);
-	file = dup2(file,0);
+	// if(*std_in == -1)
+	//     *std_in = dup(0);
+	// file = dup2(file,0);
 	return (file);
 }
 

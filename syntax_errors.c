@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 10:39:33 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 12:43:37 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/10 17:01:32 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_lex	*ft_syntax_pipe(t_lex *lexer)
     tmp = lexer;
     if(tmp && tmp->type == PIPE)
     {
-        printf("syntax error near unexpected token `|'\n");
+        printf("minishell: syntax error\n");
         return (NULL);
     }
     while (tmp)
@@ -48,13 +48,13 @@ t_lex	*ft_syntax_pipe(t_lex *lexer)
         {
             if (!tmp->next )
             {
-                printf("syntax error near unexpected token `|'\n");
+                printf("minishell: syntax error\n");
                 ft_free_lex(lexer);
                 return (NULL);
             }
             if (!tmp->next &&  tmp->next->type != WORD && !tmp_isredir(tmp->next) )
             {
-                printf("syntax error near unexpected token `|'\n");
+                printf("minishell: syntax error\n");
                 ft_free_lex(lexer);
                 return (NULL);
             }
@@ -73,14 +73,13 @@ t_lex   *ft_syntax_redir(t_lex *lexer)
         {
             if (!tmp->next)
             {
-                printf("syntax error near unexpected token `newline'\n");
+                printf("minishell: syntax error\n");
                 ft_free_lex(lexer);
                 return(NULL);
             }
-            if (!tmp->next  || (tmp->next->type != VAR && tmp->next->type != WORD))
+            if (tmp->next->type != VAR && tmp->next->type != WORD)
             {
-                printf("tmp->next->type = %s\n", get_type(tmp->next->type));
-                printf("syntax error near unexpected token `newline'\n");
+                printf("minishell: syntax error\n");
                 ft_free_lex(lexer);
                 return(NULL);
             }
@@ -109,7 +108,7 @@ t_lex	*ft_syntax_quote(t_lex *lexer)
             }
             if (tmp== NULL)
             {
-                printf("syntax error near unexpected token `'\n");
+                printf("minishell: syntax error\n");
                 ft_free_lex(lexer);
                 return(NULL);
             }

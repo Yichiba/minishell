@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 13:10:05 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/10 16:45:29 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,9 +212,9 @@ int main(int ac, char **av, char **environ)
 		lexer = ft_lexer(input);
 		lexer = ft_clean(lexer,env);
 		parser = ft_parser(lexer);
+		ft_excutions(parser,env);
 		if(parser && parser->args_num == 0)
 			lexer = NULL;
-		ft_excutions(parser,env);
 		ft_free(lexer,parser);
 		free(input);
 		// system("leaks minishell");

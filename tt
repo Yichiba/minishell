@@ -1,0 +1,110 @@
+a.out
+builtins_outils.c
+builtins_outils.o
+dd
+enviremenr.c
+enviremenr.o
+error.c
+excutions.c
+excutions.o
+execve.c
+execve.o
+f1
+file 
+file   
+file.c
+file2
+file3
+file4
+file5
+filee
+files
+ft_itoa.c
+ft_itoa.o
+kkk llll 
+lexer.c
+lexer.o
+lexer_outils.c
+lexer_outils.o
+makefile
+minishell
+minishell.c
+minishell.h
+minishell.o
+minishell_path
+minishell_prefix
+node_utils.c
+pars_redir.c
+pars_redir.o
+parser.c
+parser.o
+pipe.c
+print.c
+print.o
+redirections.c
+redirections.o
+results
+syntax_errors.c
+syntax_errors.o
+t
+test.c
+tt
+txt
+total 528
+drwxr-xr-x  57 yichiba  candidates   1938 Aug 10 16:56 .
+drwxr-xr-x  39 yichiba  candidates   1326 Aug 10 16:09 ..
+-rw-r--r--   1 yichiba  candidates   6148 Aug  9 19:41 .DS_Store
+drwxr-xr-x  13 yichiba  candidates    442 Aug 10 13:21 .git
+drwxr-xr-x   5 yichiba  candidates    170 Aug  9 19:41 .vscode
+-rwxr-xr-x   1 yichiba  candidates  12604 Aug 10 16:47 a.out
+-rw-r--r--   1 yichiba  candidates   2465 Aug  9 19:44 builtins_outils.c
+-rw-r--r--   1 yichiba  candidates   2500 Aug 10 16:48 builtins_outils.o
+-rwxr-xr-x   1 yichiba  candidates    499 Aug 10 16:33 dd
+-rw-r--r--   1 yichiba  candidates   2087 Aug  9 19:44 enviremenr.c
+-rw-r--r--   1 yichiba  candidates   2140 Aug 10 16:48 enviremenr.o
+-rw-r--r--   1 yichiba  candidates    892 Aug  9 19:44 error.c
+-rw-r--r--   1 yichiba  candidates   8293 Aug 10 16:03 excutions.c
+-rw-r--r--   1 yichiba  candidates   9616 Aug 10 16:48 excutions.o
+-rw-r--r--   1 yichiba  candidates   3987 Aug 10 14:13 execve.c
+-rw-r--r--   1 yichiba  candidates   3536 Aug 10 16:48 execve.o
+-rw-r--r--   1 yichiba  candidates    513 Aug 10 16:31 f1
+-rw-r--r--   1 yichiba  candidates      0 Aug 10 16:28 file 
+-rw-r--r--   1 yichiba  candidates      0 Aug 10 16:29 file   
+-rw-r--r--   1 yichiba  candidates   2310 Aug  9 19:44 file.c
+-rwxr-xr-x   1 yichiba  candidates      0 Aug 10 16:31 file2
+-rwxr-xr-x   1 yichiba  candidates    513 Aug 10 16:31 file3
+-rwxr-xr-x   1 yichiba  candidates      0 Aug 10 16:27 file4
+-rwxr-xr-x   1 yichiba  candidates      6 Aug 10 16:27 file5
+-rwxr-xr-x   1 yichiba  candidates      0 Aug 10 16:30 filee
+-rwxr-xr-x   1 yichiba  candidates      0 Aug 10 16:30 files
+-rw-r--r--   1 yichiba  candidates   2151 Aug 10 12:06 ft_itoa.c
+-rw-r--r--   1 yichiba  candidates   2196 Aug 10 16:48 ft_itoa.o
+-rw-r--r--   1 yichiba  candidates      5 Aug  9 21:19 kkk llll 
+-rw-r--r--   1 yichiba  candidates   3626 Aug  9 19:44 lexer.c
+-rw-r--r--   1 yichiba  candidates   3884 Aug 10 16:48 lexer.o
+-rw-r--r--   1 yichiba  candidates   5149 Aug 10 12:07 lexer_outils.c
+-rw-r--r--   1 yichiba  candidates   3916 Aug 10 16:48 lexer_outils.o
+-rw-r--r--   1 yichiba  candidates    474 Aug 10 12:59 makefile
+-rwxr-xr-x   1 yichiba  candidates  38008 Aug 10 16:48 minishell
+-rw-r--r--   1 yichiba  candidates   4217 Aug 10 16:45 minishell.c
+-rw-r--r--   1 yichiba  candidates   4353 Aug 10 11:55 minishell.h
+-rw-r--r--   1 yichiba  candidates   5200 Aug 10 16:48 minishell.o
+-rw-r--r--   1 yichiba  candidates     41 Aug 10 15:18 minishell_path
+-rw-r--r--   1 yichiba  candidates     10 Aug 10 15:18 minishell_prefix
+-rw-r--r--   1 yichiba  candidates    916 Aug  9 19:44 node_utils.c
+-rw-r--r--   1 yichiba  candidates   2648 Aug  9 19:44 pars_redir.c
+-rw-r--r--   1 yichiba  candidates   1480 Aug 10 16:48 pars_redir.o
+-rw-r--r--   1 yichiba  candidates   2218 Aug 10 16:00 parser.c
+-rw-r--r--   1 yichiba  candidates   1828 Aug 10 16:48 parser.o
+-rw-r--r--   1 yichiba  candidates    920 Aug  9 19:44 pipe.c
+-rw-r--r--   1 yichiba  candidates   2636 Aug  9 19:44 print.c
+-rw-r--r--   1 yichiba  candidates   2776 Aug 10 16:48 print.o
+-rw-r--r--   1 yichiba  candidates   2725 Aug 10 15:10 redirections.c
+-rw-r--r--   1 yichiba  candidates   2496 Aug 10 16:48 redirections.o
+drwxr-xr-x   2 yichiba  candidates     68 Aug 10 15:18 results
+-rw-r--r--   1 yichiba  candidates   3637 Aug 10 16:07 syntax_errors.c
+-rw-r--r--   1 yichiba  candidates   2696 Aug 10 16:48 syntax_errors.o
+-rwxr-xr-x   1 yichiba  candidates      0 Aug 10 16:56 t
+-rw-r--r--   1 yichiba  candidates    130 Aug 10 14:56 test.c
+-rwxr-xr-x   1 yichiba  candidates    510 Aug 10 16:56 tt
+-rwxr-xr-x   1 yichiba  candidates    504 Aug 10 16:30 txt

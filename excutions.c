@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 21:47:14 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 13:07:49 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/10 16:03:00 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,8 +197,7 @@ t_env *ft_pwd(t_env *env)
 t_env *ft_cd(t_env *env, char **tab)
 {
 	char *path;
-	// char *oldpwd = getcwd(NULL, 0);
-
+	
 	if (!tab[1])
 	{
 		path = ft_getenv(env, "HOME");
@@ -346,8 +345,8 @@ void	ft_pipe(t_global *global, int i,int id,t_pars *tmp,t_env *env,int *fd)
 
 void	_execution(t_global *global, t_pars *tmp, int i)
 {
-	// if (tmp->red)
-	// 	global->fide.file = ft_redirections(tmp->red, &global->fide);
+	if (tmp->red)
+		global->fide.file = ft_redirections(tmp->red, &global->fide);
 	if (tmp->next)
 		pipe(global->fd);
 	global->pids[i] = fork();
@@ -403,25 +402,30 @@ void	ft_excutions(t_pars *parser, t_env *env)
 	int		i;
 	
 	i = 0;
+	if(!parser)
+		return ;
 	tmp = parser;
 	initialisation(&global,parser);
 	global.env = env;
-	while (tmp)
+	if(ft_is_builtins(tmp->full_cmd[0]) && !tmp->next)
 	{
-		if (!tmp || tmp->args_num == 0)
-			return;
-		if(ft_is_builtins(tmp->full_cmd[0]) && !tmp->next)
+		if (tmp->red)
+			global.fide.file = ft_redirections(tmp->red, &global.fide);
+		ft_builtins(tmp, env);
+		if (tmp->red)
+			close_file(tmp->red, &global.fide);
+		return;
+	}
+	else
+	{
+		while (tmp)
 		{
-			if (tmp->red)
-				global.fide.file = ft_redirections(tmp->red, &global.fide);
-			ft_builtins(tmp, env);
-			if (tmp->red)
-				close_file(tmp->red, &global.fide);
-			return;
+			if (!tmp || tmp->args_num == 0)
+				return;
+			else
+				_execution(&global, tmp, i);
+			tmp = ((i++), tmp->next);
 		}
-		else
-			_execution(&global, tmp, i);
-		tmp = ((i++), tmp->next);
 	}
 	if(parser)
 		ft_wait(global, parser);
