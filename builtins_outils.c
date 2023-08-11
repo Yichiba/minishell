@@ -92,7 +92,7 @@ int	ft_strcmp(char *str, char *ptr)
 	while (str[i] || ptr[i])
 	{
 		if (str[i] != ptr[i] && str[i] == 'n')
-			break;
+			break ;
 		if (str[i] != ptr[i])
 			return (0);
 		i++;
@@ -100,7 +100,7 @@ int	ft_strcmp(char *str, char *ptr)
 	while (str[i] == 'n')
 		i++;
 	if (str[i] == '\0')
-			return (1);
+		return (1);
 	return (0);
 }
 
@@ -111,9 +111,9 @@ int	variable_syntax(char *str)
 	i = 0;
 	while (str[i] && str[i] != '=')
 	{
-		if(i == 0 && (str[i] >= '0' && str[i] <= '9'))
+		if (i == 0 && (str[i] >= '0' && str[i] <= '9'))
 			return (1);
-		if (!ft_alpha(str[i]) && !ft_num(str[i])  && str[i] != '_')
+		if (!ft_alpha(str[i]) && !ft_num(str[i]) && str[i] != '_')
 			return (1);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 21:47:14 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 16:03:00 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 10:13:38 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -383,7 +383,7 @@ void	initialisation(t_global *global, t_pars *parser)
 	global->fide.std_in = -1;
 	global->fide.std_out = -1;
 	global->id = -1;
-	if(ft_count_cmd(parser) > 1 || (parser  && !ft_is_builtins(parser->full_cmd[0])))
+	if(ft_count_cmd(parser) > 1 || (parser->args_num  && !ft_is_builtins(parser->full_cmd[0])))
 		global->pids = malloc(sizeof(int) * (ft_count_cmd(parser)));
 	
 }
@@ -407,7 +407,7 @@ void	ft_excutions(t_pars *parser, t_env *env)
 	tmp = parser;
 	initialisation(&global,parser);
 	global.env = env;
-	if(ft_is_builtins(tmp->full_cmd[0]) && !tmp->next)
+	if(tmp->args_num && ft_is_builtins(tmp->full_cmd[0]) && !tmp->next)
 	{
 		if (tmp->red)
 			global.fide.file = ft_redirections(tmp->red, &global.fide);
@@ -429,7 +429,7 @@ void	ft_excutions(t_pars *parser, t_env *env)
 	}
 	if(parser)
 		ft_wait(global, parser);
-	if(ft_count_cmd(parser) > 1 || (parser  && !ft_is_builtins(parser->full_cmd[0])))
+	if(ft_count_cmd(parser) > 1 || (parser->args_num  && !ft_is_builtins(parser->full_cmd[0])))
 		ft_free_global(&global,parser);
 	return;
 }

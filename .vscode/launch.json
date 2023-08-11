@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/yichiba/Desktop/yowazga",
-      "program": "/Users/yichiba/Desktop/yowazga/build/Debug/outDebug"
+      "cwd": "/Users/yichiba/Desktop/minishell",
+      "program": "/Users/yichiba/Desktop/minishell/build/Debug/outDebug"
     }
   ]
 }

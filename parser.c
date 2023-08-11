@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 13:17:12 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 16:00:10 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 10:09:14 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ t_pars	*add_new_node(t_lex *start,int args)
 t_pars *ft_parser(t_lex *lexer)
 {
 	t_lex	*start;
+	t_pars	*new;
 	t_pars	*head;
 	t_lex	*ptr;
 	
@@ -70,14 +71,16 @@ t_pars *ft_parser(t_lex *lexer)
 	{
 		if(ptr->type == PIPE)
 		{
-			ft_lstadd_back(&head,add_new_node(start,ft_count_args(start)));
+			new = add_new_node(start,ft_count_args(start));
+			ft_lstadd_back(&head,new);
 			if(!ptr->next)
 				return(head) ;
 			start = ptr->next;
 		}
 		if(!ptr->next)
 		{
-			ft_lstadd_back(&head,add_new_node(start,ft_count_args(start)));
+			new = add_new_node(start,ft_count_args(start));
+			ft_lstadd_back(&head,new);
 				return(head);
 		}
 		ptr = ptr->next;

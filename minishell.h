@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 11:55:17 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 10:06:11 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ t_env	*ft_add_back(char *str);
 char	*ft_strdup(char *str);
 t_lex	*remove_node(t_lex *lex, t_lex *node);
 
-
+int 	tmp_isredir(t_lex *tmp);
 void	ft_print_lexer(t_lex *lexer);
 void	ft_print_red(t_red *red);
 void	ft_print_env(t_env *env);

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 16:45:29 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 11:12:16 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,11 @@ char **get_full_cmd(t_lex *start,int args)
 	cmd = ft_calloc((args +1) , sizeof(char *));
 	while(tmp && tmp->type != PIPE )
 	{
+		if(tmp_isredir(tmp))
+		{
+			tmp = tmp->next->next;
+			continue;
+		}
 		cmd[i++] = ft_strdup(tmp->content);
 		tmp = tmp->next;
 	}

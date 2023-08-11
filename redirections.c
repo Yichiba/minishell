@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:58:55 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 16:58:22 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 10:11:46 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int	ft_red_out(char *file_name, int file, int *stdout)
 
 int	ft_red_in(char *file_name, int file, int *std_in)
 {
-	(void)stdin;
+	(void)std_in;
 	if (file != -1)
 		close(file);
 	file = open(file_name, O_RDONLY);
