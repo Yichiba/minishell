@@ -1,7 +1,10 @@
 NAME = minishell
 
-SRCS = minishell.c enviremenr.c parser.c print.c lexer.c lexer_outils.c pars_redir.c excutions.c ft_itoa.c  syntax_errors.c\
-		builtins_outils.c redirections.c execve.c
+SRCS = minishell.c enviremenr.c parser.c print.c lexer.c lexer_outils.c pars_redir.c excutions.c syntax_errors.c\
+	builtins_outils.c redirections.c execve.c builtins.c builtins1.c builtins2.c libft_fun1.c libft_fun3.c libft_fun2.c\
+	free_allocations.c  redirections_outils.c expansion.c
+
+			
 
 CC = cc
 

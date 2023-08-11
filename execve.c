@@ -6,171 +6,124 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 16:03:46 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 14:13:39 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 19:19:05 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char *ft_strjoiin(char *str, char *tab,int flag)
+char	**ft_env_to_tab(t_env *env)
 {
-	int i = 0;
-	int j = 0;
-	char *tmp;
-	tmp = ft_calloc(ft_strlen(str) + ft_strlen(tab) + 2, sizeof(char));
-	while(str && str[i])
+	char	**tab;
+	t_env	*tmp;
+	int		i;
+
+	i = 0;
+	tmp = env;
+	while (tmp)
 	{
-		tmp[i] = str[i];
+		if (tmp->var && tmp->str)
+			i++;
+		tmp = tmp->next;
+	}
+	tab = ft_calloc((i + 1), sizeof(char *));
+	tmp = env;
+	i = 0;
+	while (tmp)
+	{
+		if (tmp->var && tmp->str)
+			tab[i++] = ft_strjoiin(tmp->var, tmp->str, 1);
+		tmp = tmp->next;
+	}
+	tab[i] = NULL;
+	return (tab);
+}
+
+int	ft_is_builtins(char *str)
+{
+	if (ft_strcmp(str, "export") || ft_strcmp(str, "unset") || ft_strcmp(str,
+			"cd") || ft_strcmp(str, "pwd") || ft_strcmp(str, "echo")
+		|| ft_strcmp(str, "env") || ft_strcmp(str, "exit"))
+		return (1);
+	else
+		return (0);
+}
+
+char	*ft_access(char **tab, char *cmd)
+{
+	char	*path;
+	int		i;
+
+	path = NULL;
+	i = 0;
+	if (ft_strchr(cmd, '/') && access(cmd, F_OK) == 0)
+	{
+		if (access(cmd, X_OK) == 0)
+			return (cmd);
+		else
+			write(2, "minishell : Permission denied", 29);
+	}
+	while (tab[i])
+	{
+		path = ft_strjoiin(tab[i], cmd, 0);
+		if (access(path, F_OK) == 0)
+			return (path);
+		free(path);
 		i++;
 	}
-    if(flag == 1)
-        tmp[i++] = '=';
-    else if(flag == 0)
-        tmp[i++] = '/';
-	while(tab && tab[j])
+	printf("minishell: %s: command not found\n", cmd);
+	exit(127);
+	return (NULL);
+}
+
+t_env	*find_commands(t_env *env, t_pars *parser)
+{
+	char	**env_tab;
+	char	*path;
+	t_env	*tmp;
+	char	**path_tab;
+
+	env_tab = NULL;
+	path = NULL;
+	tmp = NULL;
+	tmp = env;
+	while (tmp)
 	{
-		tmp[i] = tab[j];
-		i++;
-		j++;
+		if (tmp->var && ft_strcmp(tmp->var, "PATH"))
+		{
+			path = tmp->str;
+			break ;
+		}
+		tmp = tmp->next;
 	}
-	tmp[i] = '\0';
-	return(tmp);
+	env_tab = ft_env_to_tab(env);
+	path_tab = ft_split(path, ':');
+	path = ft_access(path_tab, parser->full_cmd[0]);
+	if (path)
+		execve(path, parser->full_cmd, env_tab);
+	return (env);
 }
 
-char    **ft_env_to_tab(t_env *env)
+void	ft_pipe(t_global *global, int i, int id, t_pars *tmp)
 {
-    char **tab;
-    t_env *tmp;
-    int i = 0;
-    
-    tmp = env;
-    while(tmp)
-    {
-        if(tmp->var && tmp->str)
-            i++;
-        tmp = tmp->next;
-    }
-    tab = ft_calloc((i + 1) , sizeof(char *));
-    tmp = env;
-    i = 0;
-    while(tmp)
-    {
-        if(tmp->var && tmp->str)
-           {
-                tab[i] = ft_strjoiin(tmp->var,tmp->str,1);
-                i++;
-           }
-        tmp = tmp->next;
-    }
-    tab[i] = NULL;
-    return(tab);
-}
-
-int ft_count(char *str,char sep)
-{
-    int i = 0;
-    int counter = 0;
-    while(str && str[i])
-    {
-        if(str[i] == sep)
-            counter++;
-        i++;
-    }
-    return(counter + 1);
-}
-
-char *ft_substr(char *str,int start, int end)
-{
-    char *tab;
-    int i  = start;
-   
-    tab = ft_calloc(end - start +1, sizeof(char));
-    i = 0;
-    while(str[start] && start < end)
-       {
-            tab[i] = str[start];
-            start++;
-            i++;
-       }
-    tab[i] = '\0';
-     return(tab);
-}
-
-char **ft_split(char *str, char sep)
-{
-    char **tab;
-    int start = 0;
-    int i ;
-    i = 0;
-    
-    int counter = 0;
-    tab = ft_calloc(sizeof(char *),ft_count(str,':')+1);
-    while(str && str[i])
-    {
-        if(str[i] == sep)
-        {
-            tab[counter++] = ft_substr(str,start,i);
-            start = i+1;
-        }
-        if(str[i+1] == '\0')
-            tab[counter++] = ft_substr(str,start,i+1);
-        i++;
-    }
-    tab[counter] = NULL;
-    return(tab);
-}
-
-
-char *ft_access(char ** tab,char *cmd)
-{
-    char *path =NULL;
-    int i = 0;
-    if(access(cmd,F_OK) == 0)
-            return(cmd);
-    while(tab[i])
-    {
-        path = ft_strjoiin(tab[i],cmd,0);
-        if(access(path,F_OK) == 0)
-        {
-            // printf("path = %s\n",path);
-            return(path);
-        }
-        free(path);
-        i++;
-    }
-    printf("minishell: %s: command not found\n",cmd);
-    exit(127);
-    return(NULL);
-}
-
-t_env   *find_commands(t_env *env,t_pars *parser)
-{
-    char **env_tab=NULL;
-    (void)parser;
-    char *path = NULL;
-    t_env *tmp = NULL;
-    char **path_tab;
-    tmp = env;
-    // if(ft_is_builtins(parser->full_cmd[0]))
-	// 			{
-    //                 ft_builtins(parser, env);
-    //                 exit(0);
-    //             }
-    while(tmp)
-    {
-        if(tmp->var && ft_strcmp(tmp->var,"PATH"))
-        {
-            path = tmp->str;
-            break;
-        }
-        tmp = tmp->next;
-    }
-    env_tab = ft_env_to_tab(env);
-    path_tab = ft_split(path,':');
-    path = ft_access(path_tab,parser->full_cmd[0]); 
-    if(path)
-    {
-        execve(path,parser->full_cmd,env_tab);
-    }
-    return(env);
+	if (i > 0)
+	{
+		dup2(id, 0);
+		close(id);
+	}
+	if (tmp->next)
+	{
+		dup2(global->fd[1], 1);
+		close(global->fd[1]);
+		close(global->fd[0]);
+	}
+	if (tmp->red)
+		global->fide.file = ft_redirections(tmp->red, &global->fide);
+	if (ft_is_builtins(tmp->full_cmd[0]))
+	{
+		ft_builtins(tmp, global->env);
+		exit(0);
+	}
+	else
+		find_commands(global->env, tmp);
 }

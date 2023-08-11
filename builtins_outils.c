@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:04:45 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/06 16:52:27 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 13:44:23 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,39 +47,6 @@ char	*ft_getenv(t_env *env, char *var)
 		ptr = ptr->next;
 	}
 	return (NULL);
-}
-
-t_env	*ft_remove_node(t_env *env, char *data)
-{
-	t_env	*previous;
-	t_env	*current;
-
-	previous = NULL;
-	current = env;
-	while (current)
-	{
-		if (ft_strcmp(current->var, data))
-		{
-			if (previous == NULL)
-			{
-				env = current->next;
-				free(current);
-				current = env;
-			}
-			else
-			{
-				previous->next = current->next;
-				free(current);
-				return (env);
-			}
-		}
-		else
-		{
-			previous = current;
-			current = current->next;
-		}
-	}
-	return (env);
 }
 
 int	ft_strcmp(char *str, char *ptr)

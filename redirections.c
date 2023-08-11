@@ -6,25 +6,11 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:58:55 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 10:11:46 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 20:23:01 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-void	close_file(t_red *red,t_file *fide)
-{
-	if (red->type == REDIR_OUT || red->type == DREDIR_OUT)
-	{
-		close(fide->file);
-		dup2(fide->std_out, 1);
-	}
-	if (red->type == REDIR_IN)
-	{
-		dup2(fide->std_in,0);
-		close(fide->file);
-	}
-}
 
 int	ft_red_out(char *file_name, int file, int *stdout)
 {
@@ -48,9 +34,9 @@ int	ft_red_in(char *file_name, int file, int *std_in)
 		printf("minishell: %s: No such file or directory\n", file_name);
 		return (-5);
 	}
-	// if(*std_in == -1)
-	//     *std_in = dup(0);
-	// file = dup2(file,0);
+	if (*std_in == -1)
+		*std_in = dup(0);
+	file = dup2(file, 0);
 	return (file);
 }
 
@@ -64,7 +50,8 @@ int	ft_double_red_out(char *file_name, int file, int *stdout)
 	file = dup2(file, 1);
 	return (file);
 }
-int		ft_here_doc(char *file_name, int file, int *stdout)
+
+int	ft_here_doc(char *file_name, int file, int *stdout)
 {
 	if (file != -1)
 		close(file);
@@ -75,7 +62,7 @@ int		ft_here_doc(char *file_name, int file, int *stdout)
 	return (file);
 }
 
-int	ft_redirections(t_red *red,t_file *fide)
+int	ft_redirections(t_red *red, t_file *fide)
 {
 	t_red	*tmp;
 	int		file;
@@ -90,8 +77,8 @@ int	ft_redirections(t_red *red,t_file *fide)
 			file = ft_red_in(tmp->file, file, &fide->std_in);
 		else if (tmp->type == DREDIR_OUT)
 			file = ft_double_red_out(tmp->file, file, &fide->std_out);
-		if(file == -5)
-			return(-5);
+		if (file == -5)
+			return (-5);
 		// if(red->type == HERE_DOC)
 		//     ft_herdoc(tmp->file, file, &fide->std_out);
 		tmp = tmp->next;

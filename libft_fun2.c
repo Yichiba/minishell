@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*   libft_fun2.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/19 10:06:33 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/10 12:06:18 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 22:26:57 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include"minishell.h"
+#include "minishell.h"
 
 static int	nchar(int n)
 {
@@ -57,56 +57,81 @@ char	*ft_itoa(int n)
 		str[sl] = n + '0';
 	return (str);
 }
-char	*ft_strchr(const char *s, int c)
-{
-	int i;
-	
-	i = 0;
-	while(s[i])
-	{
-		if(s[i] == c)
-			return((char *)&s[i]);
-		i++;
-	}
-	if(s[i] == c)
-		return((char *)&s[i]);
-	return(NULL);
-}
 
-char *ft_trim(char *str, char sep)
+char	*ft_new(char *str, char sep, int start, int j)
 {
-	int i = 0;
-	int j = 0;
-	int start;
-	char *new;
-	while(str[i] == sep)
-		i++;
-	start = i;
-	while(str[i])
-		{
-			if((str[i] == sep && str[i+1] == sep) || (str[i] == sep && str[i+1] == '\0'))
-				i++;
-			else
-			{
-				j++;
-				i++;
-			}
-		}
+	char	*new;
+	int		i;
+
 	new = (char *)malloc(j + 1);
 	i = start;
 	j = 0;
-	while(str[i])
+	while (str[i])
 	{
-		if((str[i] == sep && str[i+1] == sep) || (str[i] == sep && str[i+1] == '\0'))
+		if ((str[i] == sep && str[i + 1] == sep)
+			|| (str[i] == sep && str[i + 1] == '\0'))
 			i++;
 		else
-				new[j++] = str[i++];	
+			new[j++] = str[i++];
 	}
 	new[j] = '\0';
-	if(str)
+	if (str)
 	{
 		free(str);
-		str =NULL;
+		str = NULL;
 	}
-	return(new);
+	return (new);
+}
+
+char	*ft_trim(char *str, char sep)
+{
+	int		i;
+	int		j;
+	int		start;
+	char	*new;
+
+	i = 0;
+	j = 0;
+	while (str[i] == sep)
+		i++;
+	start = i;
+	while (str[i])
+	{
+		if ((str[i] == sep && str[i + 1] == sep)
+			|| (str[i] == sep && str[i + 1] == '\0'))
+			i++;
+		else
+		{
+			j++;
+			i++;
+		}
+	}
+	new = ft_new(str, sep, start, j);
+	return (new);
+}
+
+char	*ft_strjoin(char *str, char *tab)
+{
+	int		i;
+	int		j;
+	char	*tmp;
+
+	i = 0;
+	j = 0;
+	tmp = ft_calloc(ft_strlen(str) + ft_strlen(tab) + 1, sizeof(char));
+	while (str && str[i])
+	{
+		tmp[i] = str[i];
+		i++;
+	}
+	if (str)
+		free(str);
+	while (tab && tab[j])
+	{
+		tmp[i] = tab[j];
+		i++;
+		j++;
+	}
+	tmp[i] = '\0';
+	return (tmp);
 }

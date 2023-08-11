@@ -6,223 +6,125 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 11:12:16 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 22:22:11 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int ft_alpha(char str)
+char	**get_full_cmd(t_lex *start, int args)
 {
-	if(str >= 'a' && str <= 'z')
-		return(1);
-	else if(str >= 'A' && str <= 'Z')
-		return(1);
-	else
-		return(0);
-}
+	char	**cmd;
+	int		i;
+	t_lex	*tmp;
 
-int ft_num(char str)
-{
-	if(str >= '0' && str <= '9')
-		return(1);
-	else
-		return(0);
-}
-
-char *set_var(char *input,int *i)
-{
-	int j = 0;
-	char *var;
-	while(ft_alpha(input[*i+j]) || ft_num(input[*i+j]) || input[*i+j] == '_')
-		j++;
-	var = ft_calloc(j + 2, sizeof(char));
-	j = 0;
-	var[j++] = '$';
-	while(ft_alpha(input[*i]) || ft_num(input[*i]) || input[*i] == '_')
-		var[j++] = input[(*i)++];
-	var[j] = '\0';
-	(*i)--;
-	return(var);
-}
-
-char *ft_dollar(char *input, int *i)
-{
-	char var[10];
-	while(input[*i])
+	cmd = NULL;
+	i = 0;
+	tmp = start;
+	if (!tmp)
+		return (NULL);
+	cmd = ft_calloc((args + 1), sizeof(char *));
+	while (tmp && tmp->type != PIPE)
 	{
-		(*i)++;
-		if(input[*i] == '$')
-			return(ft_strdup("$$"));
-		if(input[*i] == '@')
-			return(ft_strdup(""));
-		else if(input[*i] == '?')
-			return(ft_strdup("$?"));
-		else if(ft_num(input[*i]))
-		{
-			var[0] = '$';
-			var[1] = input[*i];
-			var[2] = '\0';
-			return(ft_strdup(var));
-		}
-		else if( ft_alpha(input[*i] ) || input[*i] == '_')
-			return(set_var( input, i));
-		else
-			{
-				*i = *i - 1;
-				return(ft_strdup("$"));
-			}
-	}
-	return(ft_strdup("$"));
-}
-
-int ft_strlen(char *str)
-{
-	int i = 0;
-	while(str && str[i])
-		i++;
-	return(i);
-}
-
-char *ft_strjoin(char *str, char *tab)
-{
-	int i = 0;
-	int j = 0;
-	char *tmp;
-	tmp = ft_calloc(ft_strlen(str) + ft_strlen(tab) + 1, sizeof(char));
-	while(str && str[i])
-	{
-		tmp[i] = str[i];
-		i++;
-	}
-	if(str)
-		free(str);
-	while(tab && tab[j])
-	{
-		tmp[i] = tab[j];
-		i++;
-		j++;
-	}
-	tmp[i] = '\0';
-	return(tmp);
-}
-
-char **get_full_cmd(t_lex *start,int args)
- {
-	char 	**cmd = NULL;
-	int i = 0;
-	t_lex *tmp;
-	tmp= start;
-	if(!tmp)
-		return(NULL);
-	cmd = ft_calloc((args +1) , sizeof(char *));
-	while(tmp && tmp->type != PIPE )
-	{
-		if(tmp_isredir(tmp))
+		if (tmp_isredir(tmp))
 		{
 			tmp = tmp->next->next;
-			continue;
+			continue ;
 		}
 		cmd[i++] = ft_strdup(tmp->content);
 		tmp = tmp->next;
 	}
 	cmd[i] = NULL;
-	return(cmd);
- }
- 
- int count_pipes(t_lex *lexer)
- {
-	 int i = 0;
-	 while(lexer)
-	 {
-		 if(lexer->type == PIPE)
+	return (cmd);
+}
+
+int	count_pipes(t_lex *lexer)
+{
+	int	i;
+
+	i = 0;
+	while (lexer)
+	{
+		if (lexer->type == PIPE)
 			i++;
 		lexer = lexer->next;
-	 }
-	 return(i+1);
- }
+	}
+	return (i + 1);
+}
 
-void	free_double_ptr(char **str)
+char	*ft_syntax_quot(char *input)
 {
-	int i = 0;
-	while(str && str[i])
+	int		i;
+	char	quote;
+
+	i = 0;
+	while (input[i])
 	{
-		free(str[i]);
+		if (input[i] == '\'' || input[i] == '\"')
+		{
+			quote = input[i++];
+			while (input[i])
+			{
+				if (input[i] == quote)
+					break ;
+				i++;
+			}
+			if (input[i] == '\0')
+			{
+				printf("minishell: syntax error\n");
+				return (NULL);
+			}
+		}
 		i++;
 	}
-	free(str);	
+	return (input);
 }
 
-void	free_redir(t_red *red)
+t_env	*ft_minishell(t_env *env)
 {
-	t_red *tmp;
-	while(red)
-	{
-		tmp = red;
-		red = red->next;
-		free(tmp->file);
-		free(tmp);
-	}
-}
+	char	*input;
+	t_lex	*lexer;
+	t_pars	*parser;
 
-void	ft_free(t_lex *lexer, t_pars *parser)
-{
-	t_lex *tmp;
-	t_pars *tmp2;
-	if(parser && parser->args_num == 0)
-		lexer = NULL;
-	while(lexer && lexer->content )
+	while (1)
 	{
-		tmp = lexer;
-		lexer = lexer->next;
-		free(tmp->content);
-		free(tmp);
-	}
-	if(parser)
-		free_redir(parser->red);
-	while(parser)
-	{
-		tmp2 = parser;
-		parser = parser->next;
-		free_double_ptr(tmp2->full_cmd);
-		free(tmp2);
-	}
-}
-
-
-int main(int ac, char **av, char **environ)
-{
-	t_lex *lexer = NULL;
-	t_pars *parser = NULL;
-	g_exit = 0;
-    char *input;
-	
-	(void)ac;
-	(void)av;
-    t_env *env = NULL;
-    env = get_env(environ);
-	parser = NULL;
-	parser = NULL ;
-    while(1)
-    {
-        input = readline("\e[1;53mMiniShell$ \e[0m");
+		input = readline("\e[1;53mMiniShell$ \e[0m");
 		add_history(input);
 		if (input == NULL)
 			exit(g_exit);
 		if (ft_strlen(input) == 0)
 		{
 			free(input);
-			continue;
+			continue ;
 		}
+		input = ft_syntax_quot(input);
 		lexer = ft_lexer(input);
-		lexer = ft_clean(lexer,env);
+		lexer = ft_clean(lexer, env);
 		parser = ft_parser(lexer);
-		ft_excutions(parser,env);
-		if(parser && parser->args_num == 0)
+		env = ft_excutions(parser, env);
+		if (parser && parser->args_num == 0)
 			lexer = NULL;
-		ft_free(lexer,parser);
+		ft_free(lexer, parser);
 		free(input);
-		// system("leaks minishell");
-    }
-    return (g_exit);
+	}
+}
+
+int	main(int ac, char **av, char **environ)
+{
+	t_lex	*lexer;
+	t_pars	*parser;
+	t_env	*env;
+
+	(void)ac;
+	(void)av;
+	g_exit = 0;
+	lexer = NULL;
+	parser = NULL;
+	env = get_env(environ);
+	while (1)
+	{
+		env = ft_minishell(env);
+		system("leaks minishell");
+	}
+	return (g_exit);
 }

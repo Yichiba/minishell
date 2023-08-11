@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:57:51 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/06 14:13:48 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/11 20:18:23 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,9 +69,10 @@ char	*ft_same_type(char *input, int *i)
 	int		j;
 
 	j = 0;
-	while (input[*i + j] != ' ' && input[*i + j] != '\0' && input[*i
-		+ j] != '\'' && input[*i + j] != '\"' && input[*i + j] != '$'
-		&& input[*i + j] != '|' && input[*i + j] != '<' && input[*i + j] != '>')
+	while (input[*i + j] != ' ' && input[*i + j] != '\0'
+		&& input[*i + j] != '\'' && input[*i + j] != '\"'
+		&& input[*i + j] != '$' && input[*i + j] != '|'
+		&& input[*i + j] != '<' && input[*i + j] != '>')
 		j++;
 	str = ft_calloc(j + 1, sizeof(char));
 	j = 0;
@@ -105,12 +106,12 @@ t_lex	*ft_add(t_lex *lex, char *content, enum e_token type)
 
 t_lex	*ft_lexer(char *input)
 {
-	int i;
-	t_lex *lexer = NULL;
-	
+	int		i;
+	t_lex	*lexer;
 
+	lexer = NULL;
 	i = 0;
-	while (input[i])
+	while (input && input[i])
 	{
 		if (input[i] == ' ')
 			lexer = ft_add(lexer, ft_strdup(" "), WHITE_SPACE);
@@ -119,7 +120,7 @@ t_lex	*ft_lexer(char *input)
 		else if (input[i] == '\"')
 			lexer = ft_add(lexer, ft_strdup("\""), DOUBLE_QUOTE);
 		else if (input[i] == '$')
- 				lexer = ft_add(lexer, ft_dollar(input, &i), VAR);
+			lexer = ft_add(lexer, ft_dollar(input, &i), VAR);
 		else if (input[i] == '|')
 			lexer = ft_add(lexer, ft_strdup("|"), PIPE);
 		else if (input[i + 1] && input[i] == '<' && input[i + 1] == '<' && i++)
@@ -134,6 +135,6 @@ t_lex	*ft_lexer(char *input)
 			lexer = ft_add(lexer, ft_same_type(input, &i), WORD);
 		i++;
 	}
-	lexer = ft_set_state(lexer);	
+	lexer = ft_set_state(lexer);
 	return (lexer);
 }
