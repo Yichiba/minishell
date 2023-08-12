@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 12:44:44 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 16:50:03 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 17:50:18 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ t_env	*ft_cd(t_env *env, char **tab)
 		path = ft_getenv(env, "HOME");
 		if (!path)
 		{
-			printf("cd: HOME not set\n");
+			write(2, "minishell: ", 11);
+			write(2, "cd: HOME not set\n",17);
 			g_exit = 1;
 			return (env);
 		}

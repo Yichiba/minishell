@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:10:17 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 22:20:16 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 11:08:05 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,36 +81,6 @@ t_lex	*remove_node(t_lex *lex, t_lex *node)
 		tmp->next = next_node;
 	}
 	return (lex);
-}
-
-t_lex	*ft_remove_space(t_lex *lexer)
-{
-	t_lex	*tmp;
-	t_lex	*prev;
-	t_lex	*to_remove;
-
-	tmp = lexer;
-	prev = NULL;
-	while (tmp)
-	{
-		if (tmp->type == WHITE_SPACE)
-		{
-			to_remove = tmp;
-			tmp = tmp->next;
-			if (prev)
-				prev->next = tmp;
-			else
-				lexer = tmp;
-			free(to_remove->content);
-			free(to_remove);
-		}
-		else
-		{
-			prev = tmp;
-			tmp = tmp->next;
-		}
-	}
-	return (lexer);
 }
 
 char	*look_for_var(t_env *env, char *var_name)

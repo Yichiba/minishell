@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 14:30:59 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 22:30:10 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 11:17:08 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,7 @@ char	*ft_dollar(char *input, int *i)
 		else if (ft_alpha(input[*i]) || input[*i] == '_')
 			return (set_var(input, i));
 		else
-		{
-			(*i)--;
-			return (ft_strdup("$"));
-		}
+			return ((*i)--, ft_strdup("$"));
 	}
 	return (ft_strdup("$"));
 }

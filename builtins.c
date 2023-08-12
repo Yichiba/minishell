@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 12:55:41 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 22:30:34 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 12:18:10 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,6 @@ void	ft_putstr(char *str)
 	}
 }
 
-int	ft_isdigit(int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-
 int	ft_check_num(char *str)
 {
 	int	i;
@@ -49,6 +42,23 @@ int	ft_check_num(char *str)
 	return (0);
 }
 
+void	print_exit(int num, char *tab)
+{
+	// printf("exit\n");
+	if (num == 0)
+		exit(g_exit);
+	else if (num == 1)
+	{
+		num = ft_atoi(tab);
+		exit(num);
+	}
+	else if (num == 2)
+	{
+		printf("minishell: exit: %s: numeric argument required\n", tab);
+		exit(255);
+	}
+}
+
 t_env	*ft_exit(t_env *env, char **tab)
 {
 	int	i;
@@ -59,17 +69,11 @@ t_env	*ft_exit(t_env *env, char **tab)
 	while (tab[i])
 		i++;
 	if (i == 1)
-		exit(g_exit);
+		print_exit(0, tab[1]);
 	else if ((i == 2) && (ft_check_num(tab[1]) == 0))
-	{
-		num = ft_atoi(tab[1]);
-		exit(num);
-	}
+		print_exit(1, tab[1]);
 	else if ((i >= 2) && (ft_check_num(tab[1]) == 1))
-	{
-		printf("minishell: exit: %s: numeric argument required\n", tab[1]);
-		exit(255);
-	}
+		print_exit(2, tab[1]);
 	else
 	{
 		printf("minishell: exit: too many arguments\n");

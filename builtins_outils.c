@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:04:45 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 13:44:23 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 11:58:35 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	ft_atoi(char *str)
 	int	i;
 	int	sign;
 	int	res;
-
+	
 	i = 0;
 	sign = 1;
 	res = 0;
@@ -25,7 +25,7 @@ int	ft_atoi(char *str)
 		i++;
 	if (str[i] == '-')
 		sign = -1;
-	else if (str[i] == '-' || str[i] == '+')
+	if (str[i] == '-' || str[i] == '+')
 		i++;
 	while (str[i] >= '0' && str[i] <= '9')
 	{

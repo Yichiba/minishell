@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 21:47:14 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 19:31:20 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 17:45:07 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,13 +31,13 @@ void	ft_wait(t_global global, t_pars *parser)
 
 void	_execution(t_global *global, t_pars *tmp, int i)
 {
-	if (tmp->red)
-		global->fide.file = ft_redirections(tmp->red, &global->fide);
 	if (tmp->next)
 		pipe(global->fd);
 	global->pids[i] = fork();
 	if (global->pids[i] == 0)
 	{
+		// if (tmp->red)
+		// 	global->fide.file = ft_redirections(tmp->red, &global->fide);
 		if (global->fide.file == -5)
 			exit(1);
 		ft_pipe(global, i, global->id, tmp);
@@ -79,12 +79,6 @@ void	initialisation(t_global *global, t_pars *parser)
 	if (ft_count_cmd(parser) > 1 || (parser->args_num
 			&& !ft_is_builtins(parser->full_cmd[0])))
 		global->pids = malloc(sizeof(int) * (ft_count_cmd(parser)));
-}
-
-void	ft_free_global(t_global *global, t_pars *parser)
-{
-	(void)parser;
-	free(global->pids);
 }
 
 t_env	*ft_excutions(t_pars *parser, t_env *env)

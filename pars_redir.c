@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:13:37 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 19:51:48 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 16:24:27 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,32 @@ t_red	*ft_add_red(t_red *red, char *file, int type)
 	tmp->next = new;
 	return (red);
 }
+void	ft_putstr_fd(char *str, int fd)
+{
+	int i = 0;
+	while(str && str[i])
+		{
+			write(fd, &str[i], 1);
+			i++;
+		}
+}
+int 	ft_open_herdoc(char	*str)
+{
+	int	fd;
+	char * input;
+	
+	fd = open("/tmp/herdoc_file", O_CREAT|O_WRONLY, 0777);
+	while (1)
+	{
+		input = readline(">");
+		if(ft_strcmp(input,str))
+			break;
+		ft_putstr_fd(input,fd);
+	}
+	close(fd);
+	fd = open("/tmp/herdoc_file", O_RDONLY, 0777);
+	return(fd);
+}
 
 t_red	*ft_red(t_lex *lexer, t_lex **start)
 {
@@ -56,7 +82,10 @@ t_red	*ft_red(t_lex *lexer, t_lex **start)
 		{
 			ptr = tmp->next->next;
 			ptr2 = tmp->next->next;
+			// printf("red file =  %s\n",tmp->next->content);
 			red = ft_add_red(red, tmp->next->content, tmp->type);
+			if(tmp->type == HERE_DOC)
+				red->herdoc = ft_open_herdoc(tmp->next->content);
 			if (!ptr)
 				break ;
 		}

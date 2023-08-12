@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 22:11:22 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 14:52:37 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+#include <sys/wait.h>
+#include <signal.h>
 
 int					g_exit;
 
@@ -62,6 +64,7 @@ typedef struct s_red
 {
 	char			*file;
 	int				type;
+	int 			herdoc;
 	struct s_red	*next;
 }					t_red;
 
@@ -106,6 +109,7 @@ char				*set_value(char *str);
 t_env				*ft_add_back(char *str);
 char				*ft_strdup(char *str);
 t_lex				*remove_node(t_lex *lex, t_lex *node);
+int					ft_isdigit(int c);
 
 //*************************************//
 //             builtins
@@ -147,6 +151,10 @@ void				free_double_ptr(char **str);
 void				ft_free(t_lex *lexer, t_pars *parser);
 void				free_redir(t_red *red);
 void				ft_free_lex(t_lex *lexer);
+void				ft_free_global(t_global *global, t_pars *parser);
+
+t_lex				*ft_remove_space(t_lex *lexer);
+t_lex				*ft_set_state(t_lex *lexer);
 
 char				*ft_strchr(const char *s, int c);
 char				*ft_substr(char *str, int start, int end);
@@ -161,6 +169,8 @@ t_lex				*ft_clean(t_lex *lexer, t_env *env);
 char				*ft_getenv(t_env *env, char *var);
 int					ft_strcmp(char *str, char *ptr);
 int					variable_syntax(char *str);
+t_lex				*ft_double_quote(t_lex *tmp);
+t_lex				*ft_quote(t_lex *tmp);
 
 t_env				*ft_excutions(t_pars *parser, t_env *env);
 t_env				*ft_builtins(t_pars *parser, t_env *env);

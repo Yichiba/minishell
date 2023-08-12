@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 14:41:01 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 15:00:31 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 11:29:08 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,4 +74,10 @@ void	ft_free(t_lex *lexer, t_pars *parser)
 		free_double_ptr(tmp2->full_cmd);
 		free(tmp2);
 	}
+}
+
+void	ft_free_global(t_global *global, t_pars *parser)
+{
+	(void)parser;
+	free(global->pids);
 }

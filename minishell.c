@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 22:22:11 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 14:43:14 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ char	*ft_syntax_quot(char *input)
 			}
 			if (input[i] == '\0')
 			{
-				printf("minishell: syntax error\n");
+				write(2, "minishell: unexpected EOF while looking for matching\n", 53);
+				g_exit = 2;
 				return (NULL);
 			}
 		}
