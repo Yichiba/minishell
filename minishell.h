@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
+/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 14:52:37 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 19:57:05 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-#include <sys/wait.h>
-#include <signal.h>
+# include <sys/wait.h>
+# include <signal.h>
 
 int					g_exit;
 
@@ -64,7 +64,7 @@ typedef struct s_red
 {
 	char			*file;
 	int				type;
-	int 			herdoc;
+	int				herdoc;
 	struct s_red	*next;
 }					t_red;
 

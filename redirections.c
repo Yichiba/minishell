@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
+/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:58:55 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 17:46:23 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 19:55:47 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,14 @@ int	ft_double_red_out(char *file_name, int file, int *stdout)
 	return (file);
 }
 
-int	ft_herdoc(t_file *fide,int fd)
+int	ft_herdoc(t_file *fide, int fd)
 {
-	int file = -1;
+	int	file;
+
+	file = -1;
 	fide->std_in = dup(0);
-	file  = dup2(fd,0);
-	return(file);
-	
+	file = dup2(fd, 0);
+	return (file);
 }
 
 int	ft_redirections(t_red *red, t_file *fide)
@@ -77,8 +78,8 @@ int	ft_redirections(t_red *red, t_file *fide)
 			file = ft_double_red_out(tmp->file, file, &fide->std_out);
 		if (file == -5)
 			return (-5);
-		if(tmp->type == HERE_DOC)
-			file  = ft_herdoc(fide,red->herdoc);
+		if (tmp->type == HERE_DOC)
+			file = ft_herdoc(fide, red->herdoc);
 		tmp = tmp->next;
 	}
 	return (file);

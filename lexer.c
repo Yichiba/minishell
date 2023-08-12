@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
+/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:57:51 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 17:36:24 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 19:48:59 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ void	ft_inside_lexer(char *input, int *i, t_lex **lexer)
 		*lexer = ft_add(*lexer, ft_dollar(input, i), VAR);
 	else if (input[*i] == '|')
 		*lexer = ft_add(*lexer, ft_strdup("|"), PIPE);
-	else if (input[*i + 1] && input[*i] == '<' && input[*i + 1] == '<' &&(*i)++)
+	else if (input[*i + 1] && input[*i] == '<'
+		&& input[*i + 1] == '<' && (*i)++)
 		*lexer = ft_add(*lexer, ft_strdup("<<"), HERE_DOC);
 	else if (input[*i] == '<')
 		*lexer = ft_add(*lexer, ft_strdup("<"), REDIR_IN);

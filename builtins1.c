@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins1.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
+/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 12:44:44 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 17:50:18 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 19:51:41 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ t_env	*ft_cd(t_env *env, char **tab)
 		if (!path)
 		{
 			write(2, "minishell: ", 11);
-			write(2, "cd: HOME not set\n",17);
+			write(2, "cd: HOME not set\n", 17);
 			g_exit = 1;
 			return (env);
 		}
