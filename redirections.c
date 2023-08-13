@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirections.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
+/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:58:55 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/13 12:05:12 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/13 15:42:33 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,12 +72,13 @@ int	ft_redirections(t_pars *parser, t_file *fide, t_std *std)
 	{
 		if (tmp->type == REDIR_OUT)
 		{
-		std->file_out = ft_red_out(tmp->file,std->file_out, &fide->std_out);
+		std->file_out = ft_red_out(tmp->file, std->file_out, &fide->std_out);
 		}
 		else if (tmp->type == REDIR_IN)
-		std->file_in = ft_red_in(tmp->file,std->file_in, &fide->std_in);
+		std->file_in = ft_red_in(tmp->file, std->file_in, &fide->std_in);
 		else if (tmp->type == DREDIR_OUT)
-		std->file_out = ft_double_red_out(tmp->file,std->file_out, &fide->std_out);
+		std->file_out = ft_double_red_out(tmp->file, std->file_out,
+					&fide->std_out);
 		if (tmp->type == HERE_DOC)
 		std->file_in = parser->here_doc;
 		tmp = tmp->next;

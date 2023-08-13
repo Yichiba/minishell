@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars_redir.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
+/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:13:37 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/13 10:16:35 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/13 15:26:32 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,17 +81,10 @@ t_red	*ft_red(t_lex *lexer, t_lex **start)
 	{
 		ptr = tmp->next;
 		if (tmp_isredir(tmp))
-		{	
-			
+		{
 			ptr = tmp->next->next;
 			ptr2 = tmp->next->next;
 			red = ft_add_red(red, tmp->next->content, tmp->type);
-			// if (start->he == HERE_DOC)
-			// {
-			// 	if (red->herdoc != -1)
-			// 		close (red->herdoc);
-			// 	red->herdoc = ft_open_herdoc(tmp->next->content);
-			// }
 			if (!ptr)
 				break ;
 		}
