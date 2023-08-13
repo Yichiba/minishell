@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/31 16:03:46 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 18:04:07 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/13 11:52:13 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,26 +104,20 @@ t_env	*find_commands(t_env *env, t_pars *parser)
 	return (env);
 }
 
-void	ft_pipe(t_global *global, int i, int id, t_pars *tmp)
-{
-	if (i > 0)
-	{
-		dup2(id, 0);
-		close(id);
-	}
-	if (tmp->next)
-	{
-		dup2(global->fd[1], 1);
-		close(global->fd[1]);
-		close(global->fd[0]);
-	}
-	if (tmp->red)
-		global->fide.file = ft_redirections(tmp->red, &global->fide);
-	if (ft_is_builtins(tmp->full_cmd[0]))
-	{
-		ft_builtins(tmp, global->env);
-		exit(0);
-	}
-	else
-		find_commands(global->env, tmp);
-}
+// int _excution1(t_global *global,int i,t_pars *tmp,t_std *std)
+// {
+// 	if (global->fide.file == -5)
+// 			exit(1);
+// 		if (i > 0)
+// 		{
+// 			dup2(global->id, 0);
+// 			close(global->id);
+// 		}
+// 		if (tmp->next)
+// 		{
+// 			dup2(global->fd[1], 1);
+// 			close(global->fd[1]);
+// 			close(global->fd[0]);
+// 		}
+// 		output = ft_redirections(tmp, &global->fide, std);
+// }

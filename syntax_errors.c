@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/06 10:39:33 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 22:31:55 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/12 20:23:56 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,13 +55,7 @@ t_lex	*ft_syntax_redir(t_lex *lexer)
 		if (tmp->type == REDIR_IN || tmp->type == REDIR_OUT
 			|| tmp->type == DREDIR_OUT || tmp->type == HERE_DOC)
 		{
-			if (!tmp->next)
-			{
-				printf("minishell: syntax error\n");
-				ft_free_lex(lexer);
-				return (NULL);
-			}
-			if (tmp->next->type != VAR && tmp->next->type != WORD)
+			if (!tmp->next || (tmp->next->type != VAR && tmp->next->type != WORD))
 			{
 				printf("minishell: syntax error\n");
 				ft_free_lex(lexer);

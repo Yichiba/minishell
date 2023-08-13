@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 19:45:14 by majrou           ###   ########.fr       */
+/*   Updated: 2023/08/13 10:23:05 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ t_env	*ft_minishell(t_env *env)
 	char	*input;
 	t_lex	*lexer;
 	t_pars	*parser;
+	t_pars	*tmp;
+	t_red	*tmp_red;
 
 	while (1)
 	{
@@ -102,6 +104,23 @@ t_env	*ft_minishell(t_env *env)
 		lexer = ft_lexer(input);
 		lexer = ft_clean(lexer, env);
 		parser = ft_parser(lexer);
+
+		tmp = parser;
+		while (tmp)
+		{
+			tmp_red = tmp->red;
+			tmp->here_doc = -1;
+			while (tmp_red)
+			{
+				if (tmp->here_doc != -1)
+					close (tmp->here_doc);
+				if (tmp_red->type == HERE_DOC)
+					tmp->here_doc = ft_open_herdoc(tmp_red->file);
+				tmp_red = tmp_red->next;
+			}
+			tmp = tmp->next;
+		}
+		
 		env = ft_excutions(parser, env);
 		if (parser && parser->args_num == 0)
 			lexer = NULL;

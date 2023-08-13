@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars_redir.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:13:37 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 19:43:55 by majrou           ###   ########.fr       */
+/*   Updated: 2023/08/13 10:16:35 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ int	ft_open_herdoc(char	*str)
 	int		fd;
 	char	*input;
 
+	unlink("/tmp/herdoc_file");
 	fd = open("/tmp/herdoc_file", O_CREAT | O_WRONLY, 0777);
 	while (1)
 	{
@@ -56,6 +57,7 @@ int	ft_open_herdoc(char	*str)
 		if (ft_strcmp(input, str))
 			break ;
 		ft_putstr_fd(input, fd);
+		ft_putstr_fd("\n", fd);
 	}
 	close (fd);
 	fd = open("/tmp/herdoc_file", O_RDONLY, 0777);
@@ -79,12 +81,17 @@ t_red	*ft_red(t_lex *lexer, t_lex **start)
 	{
 		ptr = tmp->next;
 		if (tmp_isredir(tmp))
-		{
+		{	
+			
 			ptr = tmp->next->next;
 			ptr2 = tmp->next->next;
 			red = ft_add_red(red, tmp->next->content, tmp->type);
-			if (tmp->type == HERE_DOC)
-				red->herdoc = ft_open_herdoc(tmp->next->content);
+			// if (start->he == HERE_DOC)
+			// {
+			// 	if (red->herdoc != -1)
+			// 		close (red->herdoc);
+			// 	red->herdoc = ft_open_herdoc(tmp->next->content);
+			// }
 			if (!ptr)
 				break ;
 		}

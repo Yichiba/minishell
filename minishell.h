@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 19:57:05 by majrou           ###   ########.fr       */
+/*   Updated: 2023/08/13 12:06:57 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ typedef struct s_red
 {
 	char			*file;
 	int				type;
-	int				herdoc;
+	// int				herdoc;
 	struct s_red	*next;
 }					t_red;
 
@@ -81,6 +81,7 @@ typedef struct s_pars
 	char			**full_cmd;
 	t_red			*red;
 	int				args_num;
+	int				here_doc;
 	struct s_pars	*next;
 }					t_pars;
 
@@ -91,7 +92,14 @@ typedef struct s_global
 	int				fd[2];
 	int				id;
 	int				*pids;
-}					t_global;
+}				t_global;
+
+typedef struct s_std
+{
+	int	file_in;
+	int	file_out;
+}t_std;
+
 
 //*************************************//
 //          LIBFT_FUNCTIONS
@@ -198,7 +206,7 @@ t_red				*ft_red(t_lex *lexer, t_lex **start);
 char				**get_full_cmd(t_lex *start, int args);
 int					count_pipes(t_lex *lexer);
 
-int					ft_redirections(t_red *red, t_file *fide);
+int	ft_redirections(t_pars *parser, t_file *fide, t_std *std);
 void				close_file(t_red *red, t_file *fide);
 void				close_file(t_red *red, t_file *fide);
 t_lex				*ft_syntax_quote(t_lex *lexer);
@@ -219,4 +227,16 @@ char				**ft_env_to_tab(t_env *env);
 t_lex				*ft_syntax(t_lex *lexer);
 void				crate_pipe(t_pars *pars, t_lex *l, t_env *env);
 void				*ft_calloc(size_t count, size_t size);
+
+
+
+
+
+
+
+
+
+
+int					ft_open_herdoc(char	*str);
+
 #endif
