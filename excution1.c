@@ -6,7 +6,7 @@
 /*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/13 15:14:06 by majrou            #+#    #+#             */
-/*   Updated: 2023/08/13 15:25:01 by majrou           ###   ########.fr       */
+/*   Updated: 2023/08/13 18:56:50 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,4 +84,33 @@ t_pars	*ft_herdoc_intiat(t_pars *parser)
 		tmp = tmp->next;
 	}
 	return (parser);
+}
+
+char	*ft_syntax_quot(char *input)
+{
+	int		i;
+	char	quote;
+
+	i = 0;
+	while (input[i])
+	{
+		if (input[i] == '\'' || input[i] == '\"')
+		{
+			quote = input[i++];
+			while (input[i])
+			{
+				if (input[i] == quote)
+					break ;
+				i++;
+			}
+			if (input[i] == '\0')
+			{
+				write(2, "minishell: unexpected EOF looking for matching\n", 53);
+				g_exit = 2;
+				return (NULL);
+			}
+		}
+		i++;
+	}
+	return (input);
 }

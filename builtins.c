@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
+/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 12:55:41 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 12:18:10 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/13 18:57:40 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	ft_check_num(char *str)
 
 void	print_exit(int num, char *tab)
 {
-	// printf("exit\n");
+	printf("exit\n");
 	if (num == 0)
 		exit(g_exit);
 	else if (num == 1)

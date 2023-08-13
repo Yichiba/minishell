@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
+/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/13 18:09:35 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/13 18:57:17 by majrou           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,55 +52,25 @@ int	count_pipes(t_lex *lexer)
 	return (i + 1);
 }
 
-char	*ft_syntax_quot(char *input)
+void	sig_handler(int sig)
 {
-	int		i;
-	char	quote;
-
-	i = 0;
-	while (input[i])
+	if (sig == SIGINT)
 	{
-		if (input[i] == '\'' || input[i] == '\"')
-		{
-			quote = input[i++];
-			while (input[i])
-			{
-				if (input[i] == quote)
-					break ;
-				i++;
-			}
-			if (input[i] == '\0')
-			{
-				write(2, "minishell: unexpected EOF while looking for matching\n", 53);
-				g_exit = 2;
-				return (NULL);
-			}
-		}
-		i++;
-	}
-	return (input);
-}
-
-void 	sig_handler(int sig)
-{
-	if(sig == SIGINT)
-	{
-		if(g_state == 1)
+		if (g_state == 1)
 			close(0);
 		printf("\n");
-        rl_on_new_line();
-        rl_replace_line("", 0);
-        rl_redisplay();
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
 }
 
-t_env	*ft_minishell(t_env *env)
+t_env	*ft_minishell(t_env *env, int std_in)
 {
 	char	*input;
 	t_lex	*lexer;
 	t_pars	*parser;
-	int 	std_in;
-	std_in = dup(0);
+
 	while (1)
 	{
 		dup2(std_in, 0);
@@ -120,8 +90,7 @@ t_env	*ft_minishell(t_env *env)
 		env = ft_excutions(parser, env);
 		if (parser && parser->args_num == 0)
 			lexer = NULL;
-		ft_free(lexer, parser);
-		free(input);
+		ft_free(lexer, parser, &input);
 	}
 }
 
@@ -130,19 +99,20 @@ int	main(int ac, char **av, char **environ)
 	t_lex	*lexer;
 	t_pars	*parser;
 	t_env	*env;
+	int		std_in;
 
 	(void)ac;
 	(void)av;
 	g_exit = 0;
 	lexer = NULL;
 	parser = NULL;
-	
-	signal(SIGINT,sig_handler);
-	signal(SIGQUIT,SIG_IGN);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	env = get_env(environ);
+	std_in = dup(0);
 	while (1)
 	{
-		env = ft_minishell(env);
+		env = ft_minishell(env, std_in);
 	}
 	return (g_exit);
 }
