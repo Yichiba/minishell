@@ -3,25 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:14:31 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/13 15:41:42 by majrou           ###   ########.fr       */
+/*   Updated: 2023/08/13 18:00:19 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 # include <fcntl.h>
-# include <readline/history.h>
-# include <readline/readline.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
 # include <sys/wait.h>
 # include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
+void	rl_replace_line(const char *text, int clear_undo);
+
+int 				g_state;
 int					g_exit;
 
 typedef struct s_env

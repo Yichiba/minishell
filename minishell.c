@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/13 15:43:37 by majrou           ###   ########.fr       */
+/*   Updated: 2023/08/13 18:09:35 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,29 @@ char	*ft_syntax_quot(char *input)
 	return (input);
 }
 
+void 	sig_handler(int sig)
+{
+	if(sig == SIGINT)
+	{
+		if(g_state == 1)
+			close(0);
+		printf("\n");
+        rl_on_new_line();
+        rl_replace_line("", 0);
+        rl_redisplay();
+	}
+}
+
 t_env	*ft_minishell(t_env *env)
 {
 	char	*input;
 	t_lex	*lexer;
 	t_pars	*parser;
-
+	int 	std_in;
+	std_in = dup(0);
 	while (1)
 	{
+		dup2(std_in, 0);
 		input = readline("\e[1;53mMiniShell$ \e[0m");
 		add_history(input);
 		if (input == NULL)
@@ -121,11 +136,13 @@ int	main(int ac, char **av, char **environ)
 	g_exit = 0;
 	lexer = NULL;
 	parser = NULL;
+	
+	signal(SIGINT,sig_handler);
+	signal(SIGQUIT,SIG_IGN);
 	env = get_env(environ);
 	while (1)
 	{
 		env = ft_minishell(env);
-		system("leaks minishell");
 	}
 	return (g_exit);
 }

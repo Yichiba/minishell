@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   pars_redir.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: majrou <majrou@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:13:37 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/13 15:26:32 by majrou           ###   ########.fr       */
+/*   Updated: 2023/08/13 17:36:23 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,19 +48,25 @@ int	ft_open_herdoc(char	*str)
 {
 	int		fd;
 	char	*input;
-
+	
+	g_state = 1;
 	unlink("/tmp/herdoc_file");
 	fd = open("/tmp/herdoc_file", O_CREAT | O_WRONLY, 0777);
 	while (1)
 	{
 		input = readline(">");
-		if (ft_strcmp(input, str))
-			break ;
+		if (ft_strcmp(input, str) || !input)
+			{
+				free(input);
+				break ;
+			}
 		ft_putstr_fd(input, fd);
 		ft_putstr_fd("\n", fd);
+		free(input);
 	}
 	close (fd);
 	fd = open("/tmp/herdoc_file", O_RDONLY, 0777);
+	g_state = 0;
 	return (fd);
 }
 
