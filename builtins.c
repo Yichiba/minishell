@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 12:55:41 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 12:18:10 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/17 18:40:04 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,9 @@ int	ft_check_num(char *str)
 
 void	print_exit(int num, char *tab)
 {
-	// printf("exit\n");
+	printf("exit\n");
 	if (num == 0)
-		exit(g_exit);
+		exit(g_glob.g_exit);
 	else if (num == 1)
 	{
 		num = ft_atoi(tab);
@@ -77,7 +77,7 @@ t_env	*ft_exit(t_env *env, char **tab)
 	else
 	{
 		printf("minishell: exit: too many arguments\n");
-		g_exit = 1;
+		g_glob.g_exit = 1;
 	}
 	return (env);
 }

@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 12:35:57 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/11 12:43:57 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/13 22:13:05 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	ft_print_export(t_env *ptr)
 		}
 		ptr = ptr->next;
 	}
-	g_exit = 0;
+	g_glob.g_exit = 0;
 }
 
 void	ft_add_to_export(t_env *ptr, char **tab, int i, char *var_name)
@@ -51,7 +51,7 @@ void	ft_add_to_export(t_env *ptr, char **tab, int i, char *var_name)
 			ptr->next = ft_add_back(tab[i]);
 		ptr = ptr->next;
 	}
-	g_exit = 0;
+	g_glob.g_exit = 0;
 }
 
 t_env	*ft_export(t_env *env, char **tab)
@@ -75,7 +75,7 @@ t_env	*ft_export(t_env *env, char **tab)
 			{
 				write(2, "minishell: not a valid identifier", 33);
 				write(2, "\n", 1);
-				g_exit = 1;
+				g_glob.g_exit = 1;
 			}
 			i++;
 		}
@@ -121,14 +121,14 @@ t_env	*ft_unset(t_env *env, char **tab)
 		if (variable_syntax(var_name) == 0)
 		{
 			env = ft_remove_env(env, var_name);
-			g_exit = 0;
+			g_glob.g_exit = 0;
 		}
 		else
 		{
 			write(2, "export: not valid in this context: ", 35);
 			write(2, var_name, ft_strlen(var_name));
 			write(2, "\n", 1);
-			g_exit = 1;
+			g_glob.g_exit = 1;
 		}
 		i++;
 	}

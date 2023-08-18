@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 12:44:44 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 17:50:18 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/13 22:13:05 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	ft_echo(char **tab)
 	}
 	if (newline == 0)
 		printf("\n");
-	g_exit = 0;
+	g_glob.g_exit = 0;
 }
 
 t_env	*ft_pwd(t_env *env)
@@ -47,7 +47,7 @@ t_env	*ft_pwd(t_env *env)
 	str = getcwd(NULL, 0);
 	write(1, str, ft_strlen(str));
 	write(1, "\n", 1);
-	g_exit = 0;
+	g_glob.g_exit = 0;
 	free(str);
 	return (env);
 }
@@ -63,7 +63,7 @@ void	ft_env(t_env *env)
 			printf("%s=%s\n", tmp->var, tmp->str);
 		tmp = tmp->next;
 	}
-	g_exit = 0;
+	g_glob.g_exit = 0;
 }
 
 t_env	*ft_cd_(t_env *env, char **tab)
@@ -75,7 +75,7 @@ t_env	*ft_cd_(t_env *env, char **tab)
 	{
 		write(2, "minishell: ", 11);
 		write(2, "No such file or directory\n", 26);
-		g_exit = 1;
+		g_glob.g_exit = 1;
 		return (env);
 	}
 	return (env);
@@ -91,15 +91,15 @@ t_env	*ft_cd(t_env *env, char **tab)
 		if (!path)
 		{
 			write(2, "minishell: ", 11);
-			write(2, "cd: HOME not set\n",17);
-			g_exit = 1;
+			write(2, "cd: HOME not set\n", 17);
+			g_glob.g_exit = 1;
 			return (env);
 		}
 		else if (chdir(path) == -1)
 		{
 			write(2, "minishell: ", 11);
 			write(2, "No such file or directory\n", 26);
-			g_exit = 1;
+			g_glob.g_exit = 1;
 			return (env);
 		}
 	}

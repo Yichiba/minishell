@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 18:57:51 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 17:36:24 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/17 16:06:03 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,6 @@ char	*ft_strdup(char *str)
 	return (tab);
 }
 
-char	*ft_same_type(char *input, int *i)
-{
-	char	*str;
-	int		j;
-
-	j = 0;
-	while (input[*i + j] != ' ' && input[*i + j] != '\0'
-		&& input[*i + j] != '\'' && input[*i + j] != '\"'
-		&& input[*i + j] != '$' && input[*i + j] != '|'
-		&& input[*i + j] != '<' && input[*i + j] != '>')
-		j++;
-	str = ft_calloc(j + 1, sizeof(char));
-	j = 0;
-	while (input[*i] != ' ' && input[*i] != '\0' && input[*i] != '\''
-		&& input[*i] != '\"' && input[*i] != '$' && input[*i] != '|'
-		&& input[*i] != '<' && input[*i] != '>')
-		str[j++] = input[(*i)++];
-	str[j] = '\0';
-	(*i)--;
-	return (str);
-}
-
 t_lex	*ft_add(t_lex *lex, char *content, enum e_token type)
 {
 	t_lex	*tmp;
@@ -69,6 +47,25 @@ t_lex	*ft_add(t_lex *lex, char *content, enum e_token type)
 	return (lex);
 }
 
+void	*lexer_redirections(char *input, t_lex **lexer, int *i)
+{
+	if (input[*i + 1] && input[*i] == '<' && input[*i + 1] == '<')
+	{
+		(*i)++;
+		*lexer = ft_add(*lexer, ft_strdup("<<"), HERE_DOC);
+	}
+	else if (input[*i] == '<')
+		*lexer = ft_add(*lexer, ft_strdup("<"), REDIR_IN);
+	else if (input[*i + 1] && input[*i] == '>' && input[*i + 1] == '>')
+	{
+		(*i)++;
+		*lexer = ft_add(*lexer, ft_strdup(">>"), DREDIR_OUT);
+	}
+	else if (input[*i] == '>')
+		*lexer = ft_add(*lexer, ft_strdup(">"), REDIR_OUT);
+	return (*lexer);
+}
+
 void	ft_inside_lexer(char *input, int *i, t_lex **lexer)
 {
 	if (input[*i] == ' ')
@@ -81,15 +78,8 @@ void	ft_inside_lexer(char *input, int *i, t_lex **lexer)
 		*lexer = ft_add(*lexer, ft_dollar(input, i), VAR);
 	else if (input[*i] == '|')
 		*lexer = ft_add(*lexer, ft_strdup("|"), PIPE);
-	else if (input[*i + 1] && input[*i] == '<' && input[*i + 1] == '<' &&(*i)++)
-		*lexer = ft_add(*lexer, ft_strdup("<<"), HERE_DOC);
-	else if (input[*i] == '<')
-		*lexer = ft_add(*lexer, ft_strdup("<"), REDIR_IN);
-	else if (input[*i + 1] && input[*i] == '>'
-		&& input[*i + 1] == '>' && (*i)++)
-		*lexer = ft_add(*lexer, ft_strdup(">>"), DREDIR_OUT);
-	else if (input[*i] == '>')
-		*lexer = ft_add(*lexer, ft_strdup(">"), REDIR_OUT);
+	else if (input[*i] == '<' || input[*i] == '>')
+		*lexer = lexer_redirections(input, lexer, i);
 	else
 		*lexer = ft_add(*lexer, ft_same_type(input, i), WORD);
 }
@@ -101,6 +91,12 @@ t_lex	*ft_lexer(char *input)
 
 	lexer = NULL;
 	i = 0;
+	if (!input)
+		return (NULL);
+	while (input[i] == ' ' || input[i] == '\t')
+		i++;
+	if (input[i] == '\0')
+		return (NULL);
 	while (input && input[i])
 	{
 		ft_inside_lexer(input, &i, &lexer);

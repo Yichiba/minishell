@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 10:13:38 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 14:43:14 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/17 18:39:57 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,36 +52,20 @@ int	count_pipes(t_lex *lexer)
 	return (i + 1);
 }
 
-char	*ft_syntax_quot(char *input)
+void	sig_handler(int sig)
 {
-	int		i;
-	char	quote;
-
-	i = 0;
-	while (input[i])
+	if (sig == SIGINT)
 	{
-		if (input[i] == '\'' || input[i] == '\"')
-		{
-			quote = input[i++];
-			while (input[i])
-			{
-				if (input[i] == quote)
-					break ;
-				i++;
-			}
-			if (input[i] == '\0')
-			{
-				write(2, "minishell: unexpected EOF while looking for matching\n", 53);
-				g_exit = 2;
-				return (NULL);
-			}
-		}
-		i++;
+		if (g_glob.g_state == 1)
+			close(0);
+		printf("\n");
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
 	}
-	return (input);
 }
 
-t_env	*ft_minishell(t_env *env)
+t_env	*ft_minishell(t_env *env, int std_in)
 {
 	char	*input;
 	t_lex	*lexer;
@@ -89,10 +73,11 @@ t_env	*ft_minishell(t_env *env)
 
 	while (1)
 	{
+		dup2(std_in, 0);
 		input = readline("\e[1;53mMiniShell$ \e[0m");
 		add_history(input);
 		if (input == NULL)
-			exit(g_exit);
+			exit(g_glob.g_exit);
 		if (ft_strlen(input) == 0)
 		{
 			free(input);
@@ -103,10 +88,9 @@ t_env	*ft_minishell(t_env *env)
 		lexer = ft_clean(lexer, env);
 		parser = ft_parser(lexer);
 		env = ft_excutions(parser, env);
-		if (parser && parser->args_num == 0)
+		if (parser && parser->args_num == 0 && !parser->red)
 			lexer = NULL;
-		ft_free(lexer, parser);
-		free(input);
+		ft_free(lexer, parser, &input);
 	}
 }
 
@@ -115,17 +99,17 @@ int	main(int ac, char **av, char **environ)
 	t_lex	*lexer;
 	t_pars	*parser;
 	t_env	*env;
+	int		std_in;
 
 	(void)ac;
 	(void)av;
-	g_exit = 0;
+	g_glob.g_exit = 0;
 	lexer = NULL;
 	parser = NULL;
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, SIG_IGN);
 	env = get_env(environ);
-	while (1)
-	{
-		env = ft_minishell(env);
-		system("leaks minishell");
-	}
-	return (g_exit);
+	std_in = dup(0);
+	env = ft_minishell(env, std_in);
+	return (g_glob.g_exit);
 }

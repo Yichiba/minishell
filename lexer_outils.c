@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/25 19:10:17 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 11:08:05 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/17 16:04:14 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,7 @@ char	*look_for_var(t_env *env, char *var_name)
 		tmp = tmp->next;
 	}
 	free(var_name);
-	return (ft_strdup(""));
+	return ("");
 }
 
 t_lex	*ft_clean(t_lex *lexer, t_env *env)

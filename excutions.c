@@ -6,51 +6,35 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/26 21:47:14 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 17:45:07 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/17 18:36:13 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_wait(t_global global, t_pars *parser)
+void	_execution(t_g_global *g_global, t_pars *tmp, int i)
 {
-	int		status;
-	t_pars	*tmp;
-	int		i;
+	int		output;
+	t_std	std;
 
-	tmp = parser;
-	i = 0;
-	while (tmp)
-	{
-		waitpid(global.pids[i], &status, 0);
-		i++;
-		tmp = tmp->next;
-	}
-	g_exit = status >> 8;
-}
-
-void	_execution(t_global *global, t_pars *tmp, int i)
-{
 	if (tmp->next)
-		pipe(global->fd);
-	global->pids[i] = fork();
-	if (global->pids[i] == 0)
+		pipe(g_global->fd);
+	g_global->pids[i] = fork();
+	if (g_global->pids[i] == 0)
 	{
-		// if (tmp->red)
-		// 	global->fide.file = ft_redirections(tmp->red, &global->fide);
-		if (global->fide.file == -5)
-			exit(1);
-		ft_pipe(global, i, global->id, tmp);
+		_execution1(g_global, i, tmp);
+		output = ft_redirections(tmp, &g_global->fide, &std);
+		_execution2(&std, output, tmp, g_global);
 	}
 	if (i > 0)
-		close(global->id);
+		close(g_global->id);
 	if (tmp->next)
 	{
-		global->id = global->fd[0];
-		close(global->fd[1]);
+		g_global->id = g_global->fd[0];
+		close(g_global->fd[1]);
 	}
 	if (tmp->red)
-		close_file(tmp->red, &global->fide);
+		close_file(tmp->red, &g_global->fide);
 }
 
 int	ft_count_cmd(t_pars *parser)
@@ -68,55 +52,67 @@ int	ft_count_cmd(t_pars *parser)
 	return (i);
 }
 
-void	initialisation(t_global *global, t_pars *parser)
+void	initialisation(t_g_global *g_global, t_pars *parser)
 {
 	if (!parser)
 		return ;
-	global->fide.file = -1;
-	global->fide.std_in = -1;
-	global->fide.std_out = -1;
-	global->id = -1;
+	g_global->fide.file = -1;
+	g_global->fide.std_in = -1;
+	g_global->fide.std_out = -1;
+	g_global->id = -1;
 	if (ft_count_cmd(parser) > 1 || (parser->args_num
 			&& !ft_is_builtins(parser->full_cmd[0])))
-		global->pids = malloc(sizeof(int) * (ft_count_cmd(parser)));
+		g_global->pids = malloc(sizeof(int) * (ft_count_cmd(parser)));
 }
 
-t_env	*ft_excutions(t_pars *parser, t_env *env)
+t_env	*parted(t_pars *tmp, t_env *env, t_g_global g_global, t_std std)
 {
-	t_global	global;
-	t_pars		*tmp;
-	int			i;
-
-	i = 0;
-	if (!parser)
-		return (env);
-	tmp = parser;
-	initialisation(&global, parser);
-	global.env = env;
+	g_global.fide.i = 0;
 	if (tmp->args_num && ft_is_builtins(tmp->full_cmd[0]) && !tmp->next)
 	{
-		if (tmp->red)
-			global.fide.file = ft_redirections(tmp->red, &global.fide);
+		ft_redirections(tmp, &g_global.fide, &std);
+		if (std.file_in == -5)
+			return (env);
 		env = ft_builtins(tmp, env);
 		if (tmp->red)
-			close_file(tmp->red, &global.fide);
+			close_file(tmp->red, &g_global.fide);
 		return (env);
 	}
 	else
 	{
 		while (tmp)
 		{
-			if (!tmp || tmp->args_num == 0)
-				return (env);
+			ft_redirections(tmp, &g_global.fide, &std);
+			if (!tmp || tmp->args_num == 0 || std.file_in == -5)
+				return (g_global.env);
 			else
-				_execution(&global, tmp, i);
-			tmp = ((i++), tmp->next);
+				_execution(&g_global, tmp, g_global.fide.i);
+			tmp = ((g_global.fide.i++), tmp->next);
 		}
 	}
+	return (NULL);
+}
+
+t_env	*ft_excutions(t_pars *parser, t_env *env)
+{
+	t_g_global	g_global;
+	t_env		*tmp;
+	t_std		std;
+
+	if (!parser)
+		return (env);
+	parser = ft_herdoc_intiat(parser);
+	initialisation(&g_global, parser);
+	g_global.env = env;
+	std.file_in = -1;
+	std.file_out = -1;
+	tmp = parted(parser, env, g_global, std);
+	if (tmp)
+		return (tmp);
 	if (parser)
-		ft_wait(global, parser);
+		ft_wait(g_global, parser);
 	if (ft_count_cmd(parser) > 1 || (parser->args_num
 			&& !ft_is_builtins(parser->full_cmd[0])))
-		ft_free_global(&global, parser);
+		ft_free_g_global(&g_global, parser);
 	return (env);
 }

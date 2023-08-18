@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/29 12:58:55 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 17:46:23 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/17 18:37:56 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,35 +51,35 @@ int	ft_double_red_out(char *file_name, int file, int *stdout)
 	return (file);
 }
 
-int	ft_herdoc(t_file *fide,int fd)
+int	ft_herdoc(t_file *fide, int fd)
 {
-	int file = -1;
+	int	file;
+
+	file = -1;
 	fide->std_in = dup(0);
-	file  = dup2(fd,0);
-	return(file);
-	
+	file = dup2(fd, 0);
+	return (file);
 }
 
-int	ft_redirections(t_red *red, t_file *fide)
+int	ft_redirections(t_pars *parser, t_file *fide, t_std *std)
 {
 	t_red	*tmp;
-	int		file;
 
-	tmp = red;
-	file = -5;
+	tmp = parser->red;
+	std->file_in = -1;
+	std->file_out = -1;
 	while (tmp)
 	{
 		if (tmp->type == REDIR_OUT)
-			file = ft_red_out(tmp->file, file, &fide->std_out);
+		std->file_out = ft_red_out(tmp->file, std->file_out, &fide->std_out);
 		else if (tmp->type == REDIR_IN)
-			file = ft_red_in(tmp->file, file, &fide->std_in);
+			std->file_in = ft_red_in(tmp->file, std->file_in, &fide->std_in);
 		else if (tmp->type == DREDIR_OUT)
-			file = ft_double_red_out(tmp->file, file, &fide->std_out);
-		if (file == -5)
-			return (-5);
-		if(tmp->type == HERE_DOC)
-			file  = ft_herdoc(fide,red->herdoc);
+			std->file_out = ft_double_red_out(tmp->file, std->file_out,
+					&fide->std_out);
+		if (tmp->type == HERE_DOC)
+			std->file_in = parser->here_doc;
 		tmp = tmp->next;
 	}
-	return (file);
+	return (0);
 }

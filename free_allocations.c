@@ -6,7 +6,7 @@
 /*   By: yichiba <yichiba@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/11 14:41:01 by yichiba           #+#    #+#             */
-/*   Updated: 2023/08/12 11:29:08 by yichiba          ###   ########.fr       */
+/*   Updated: 2023/08/17 17:20:38 by yichiba          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ void	ft_free_lex(t_lex *lexer)
 	}
 }
 
-void	ft_free(t_lex *lexer, t_pars *parser)
+void	ft_free(t_lex *lexer, t_pars *parser, char **input)
 {
 	t_lex	*tmp;
 	t_pars	*tmp2;
 
-	if (parser && parser->args_num == 0)
-		lexer = NULL;
+	if (parser && parser->args_num == 0 && !parser->red)
+			lexer = NULL;
 	while (lexer && lexer->content)
 	{
 		tmp = lexer;
@@ -65,19 +65,20 @@ void	ft_free(t_lex *lexer, t_pars *parser)
 		free(tmp->content);
 		free(tmp);
 	}
-	if (parser)
-		free_redir(parser->red);
 	while (parser)
 	{
 		tmp2 = parser;
 		parser = parser->next;
+		if (tmp2->red)
+			free_redir(tmp2->red);
 		free_double_ptr(tmp2->full_cmd);
 		free(tmp2);
 	}
+	free(*input);
 }
 
-void	ft_free_global(t_global *global, t_pars *parser)
+void	ft_free_g_global(t_g_global *g_global, t_pars *parser)
 {
 	(void)parser;
-	free(global->pids);
+	free(g_global->pids);
 }
