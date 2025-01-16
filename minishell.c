@@ -74,7 +74,7 @@ t_env	*ft_minishell(t_env *env, int std_in)
 	while (1)
 	{
 		dup2(std_in, 0);
-		input = readline("\e[1;53mMiniShell$ \e[0m");
+		input = readline("\e[1;53m 😎 miniShell$ \e[0m");
 		add_history(input);
 		if (input == NULL)
 			exit(g_glob.g_exit);
